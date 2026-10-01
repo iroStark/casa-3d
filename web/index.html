@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>A casa, por dentro</title>
+  <meta name="description" content="Visita em 3D à casa reconstruída a partir do projeto arquitetônico: percurso guiado, ambientes, plantas, vídeo e arquivos." />
+  <meta name="theme-color" content="#f4eee5" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f4eee5'/%3E%3Cpath d='M5 15h22M8 15v10h16V15' stroke='%236b4e35' stroke-width='2.4' fill='none'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo" id="topo">
+    <a class="marca" href="#inicio" aria-label="Início">A casa<span>, por dentro</span></a>
+    <nav class="nav" aria-label="Seções">
+      <a href="#visita">Visita</a>
+      <a href="#ambientes">Ambientes</a>
+      <a href="#plantas">Plantas</a>
+      <a href="#video">Vídeo</a>
+      <a href="#arquivos">Arquivos</a>
+    </nav>
+    <button class="btn-menu" id="btnMenu" aria-expanded="false" aria-controls="menuMovel" aria-label="Abrir menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div class="menu-movel" id="menuMovel" hidden>
+    <nav aria-label="Seções (menu)">
+      <a href="#visita">Visita guiada</a>
+      <a href="#ambientes">Ambientes</a>
+      <a href="#plantas">Plantas e desenhos</a>
+      <a href="#video">Vídeo da visita</a>
+      <a href="#arquivos">Arquivos</a>
+      <a href="#fidelidade">Sobre a fidelidade</a>
+    </nav>
+    <button class="btn texto" id="btnFecharMenu">Fechar</button>
+  </div>
+
+  <!-- cena 3D fixa atrás do conteúdo -->
+  <div class="palco" id="palco" aria-hidden="true">
+    <canvas id="cena"></canvas>
+    <img class="palco-fallback" id="palcoFallback" alt="" hidden />
+  </div>
+
+  <div class="carregando" id="carregando" role="status" aria-live="polite">
+    <div class="barra"><span id="barraProgresso"></span></div>
+    <p id="textoCarregando">Carregando a casa em 3D…</p>
+  </div>
+
+  <!-- barra da exploração livre (aparece só nesse modo) -->
+  <div class="explorar-barra" id="explorarBarra" hidden>
+    <button class="btn primario" id="btnVoltarVisita">← Voltar à visita</button>
+    <div class="grupo">
+      <label class="seletor"><span class="sr">Ir para o ambiente</span>
+        <select id="selAmbiente" aria-label="Ir para o ambiente"></select>
+      </label>
+      <button class="btn" id="btnVistaSuperior" aria-pressed="false">Vista superior</button>
+      <button class="btn" id="btnCobertura" aria-pressed="false">Abrir cobertura</button>
+    </div>
+    <p class="dica" id="dicaExplorar">Arraste para girar · role ou pince para aproximar · botão direito ou dois dedos para mover</p>
+  </div>
+
+  <main id="conteudo">
+    <section class="abertura" id="inicio">
+      <div class="abertura-texto">
+        <p class="sobretitulo">Um presente para começar</p>
+        <h1>Esta é a casa.<br /><em>Vamos entrar?</em></h1>
+        <p class="lead">Reconstruímos o projeto em 3D, parede por parede, a partir das plantas, cortes e fachadas. Role a página e a visita acontece, da chegada até a beira da piscina.</p>
+        <div class="acoes">
+          <a class="btn primario" href="#visita">Começar a visita</a>
+          <button class="btn" id="btnExplorar">Explorar livremente</button>
+        </div>
+      </div>
+      <p class="rolar" aria-hidden="true">role para entrar ↓</p>
+    </section>
+
+    <section class="visita" id="visita" aria-label="Visita guiada">
+      <ol class="indice-ambientes" id="indiceAmbientes" aria-label="Ir direto para um ambiente"></ol>
+      <div id="capitulos"></div>
+    </section>
+
+    <section class="bloco claro" id="cima">
+      <div class="largura">
+        <p class="sobretitulo">De cima</p>
+        <h2>Tirando a laje para ver a casa inteira</h2>
+        <p>A cobertura é uma laje maciça plana, com cerca de um metro de beiral em todos os lados. Abra a vista superior no modo de exploração e remova a laje para enxergar a distribuição completa: social a oeste, garagem a nordeste, suítes ao sul.</p>
+        <div class="acoes"><button class="btn primario" id="btnAbrirCima">Ver de cima, sem a cobertura</button></div>
+      </div>
+    </section>
+
+    <section class="bloco" id="ambientes">
+      <div class="largura">
+        <p class="sobretitulo">Galeria</p>
+        <h2>Todos os ambientes</h2>
+        <p>Imagens renderizadas a partir do mesmo modelo usado na visita 3D. Toque em uma imagem para ampliar.</p>
+        <div class="filtros" id="filtrosGaleria" role="group" aria-label="Filtrar galeria"></div>
+        <ul class="galeria" id="galeria"></ul>
+      </div>
+    </section>
+
+    <section class="bloco claro" id="plantas">
+      <div class="largura">
+        <p class="sobretitulo">Plantas e desenhos</p>
+        <h2>O que o projeto diz, e como ficou no modelo</h2>
+        <div class="plantas-grade" id="plantasGrade"></div>
+      </div>
+    </section>
+
+    <section class="bloco" id="video">
+      <div class="largura">
+        <p class="sobretitulo">Vídeo</p>
+        <h2>A visita em movimento</h2>
+        <p>Animação renderizada no Blender com a câmera percorrendo a casa à altura dos olhos, pelo mesmo caminho da visita acima.</p>
+        <div class="video-moldura">
+          <video id="videoVisita" controls preload="metadata" playsinline poster="./renders/web/E01.jpg">
+            <source src="./video/visita.mp4" type="video/mp4" />
+            Seu navegador não reproduz vídeo. <a href="./video/visita.mp4">Baixe o arquivo</a>.
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloco claro" id="arquivos">
+      <div class="largura">
+        <p class="sobretitulo">Arquivos</p>
+        <h2>Para quem quiser abrir e continuar</h2>
+        <ul class="downloads" id="downloads"></ul>
+      </div>
+    </section>
+
+    <section class="bloco" id="fidelidade">
+      <div class="largura texto-longo">
+        <p class="sobretitulo">Sobre a fidelidade</p>
+        <h2>O que é do projeto e o que é proposta</h2>
+        <p>Paredes, vãos, alturas, laje e piscina seguem o PDF do projeto, ancorados nos eixos estruturais cotados. Móveis, cores, tecidos, plantas e objetos são uma <strong>proposta de ambientação</strong>, posicionada sobre a planta mobiliada do próprio projeto. Onde o PDF não trazia a informação, registramos a hipótese.</p>
+        <div id="listaFidelidade"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <p>Modelo, imagens, vídeo e site gerados a partir do projeto arquitetônico fornecido. As medidas devem ser confirmadas com o engenheiro responsável antes da obra.</p>
+  </footer>
+
+  <dialog class="caixa" id="caixaImagem" aria-label="Imagem ampliada">
+    <figure>
+      <img id="caixaImg" alt="" />
+      <figcaption id="caixaLegenda"></figcaption>
+    </figure>
+    <div class="caixa-acoes">
+      <button class="btn" id="caixaAnterior" aria-label="Imagem anterior">←</button>
+      <button class="btn" id="caixaProxima" aria-label="Próxima imagem">→</button>
+      <button class="btn primario" id="caixaFechar">Fechar</button>
+    </div>
+  </dialog>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

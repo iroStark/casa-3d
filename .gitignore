@@ -1,0 +1,19 @@
+# fonte privada (carimbo com nomes/contatos) — não publicar
+source/
+# grandes/derivados (publicados como anexos da release)
+blender/*.blend
+blender/*.blend1
+renders/
+video/frames/
+video/*.mp4
+exports/_tex_web/
+exports/*.zip
+.venv/
+web/node_modules/
+web/dist/
+web/public/renders/
+web/public/video/
+web/public/modelo/
+.DS_Store
+.claude/
+textures/
