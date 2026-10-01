@@ -57,7 +57,7 @@ def tree(name, M, loc, h=6.0, crown=2.6, seed=1, flowers=None, leaves=2600):
         for j in range(4):
             tips.append(end + Vector((rr.uniform(-.8, .8), rr.uniform(-.8, .8), rr.uniform(-.3, .6))) * crown * 0.35)
     per = max(30, leaves // len(tips))
-    o += F.foliage(name + "_copa", M, tips, 0.20, 0.14, per, crown * 0.42, seed, droop=0.25)
+    o += F.foliage(name + "_copa", M, tips, 0.30, 0.22, per, crown * 0.42, seed, droop=0.25)
     if flowers:
         o += F.foliage(name + "_flores", M, tips[::2], 0.10, 0.08, per // 3, crown * 0.36, seed + 1, mat=flowers, droop=0.1)
     e = group(name, o)
@@ -71,7 +71,7 @@ def shrub_row(name, M, x0, x1, y0, y1, seed=3, density=4.0):
     clusters = []
     for i in range(n):
         clusters.append((rr.uniform(x0, x1), rr.uniform(y0, y1), rr.uniform(0.25, 0.5)))
-    o = F.foliage(name, M, clusters, 0.13, 0.09, 260, 0.40, seed, mat=M["folha"], droop=-0.2)
+    o = F.foliage(name, M, clusters, 0.20, 0.14, 300, 0.40, seed, mat=M["folha"], droop=-0.2)
     e = group(name, o)
     tag(o + [e], "P")
     return e
@@ -182,7 +182,7 @@ def build(L):
         e["status"] = "X — vasos com palmeiras desenhados nas fachadas CAD (pág. 1)"
         e["categoria"] = "paisagismo"
     # árvores (P): ipê-amarelo e sombreiros
-    tree("Arvore_ipe_amarelo_NE", M, (11.8, 5.4), h=6.5, crown=2.6, seed=21, flowers=M["flor_amarela"], leaves=6000)
+    tree("Arvore_ipe_amarelo_NE", M, (1.5, 5.3), h=6.5, crown=2.6, seed=21, flowers=M["flor_amarela"], leaves=6000)
     tree("Arvore_sombra_SO", M, (3.0, -15.7), h=7.0, crown=3.0, seed=22, leaves=7000)
     tree("Arvore_sombra_SE", M, (18.4, -14.2), h=6.0, crown=2.6, seed=23, leaves=5500)
     tree("Arvore_ipe_NO", M, (-6.8, 4.6), h=5.5, crown=2.2, seed=24, flowers=M["flor_amarela"], leaves=4500)

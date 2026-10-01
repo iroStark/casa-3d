@@ -217,7 +217,8 @@ def foliage(name, M, clusters, leaf_len, leaf_w, per_cluster, radius, seed, mat=
             faces.append((k, k + 1, k + 2, k + 3))
             cell = rr.randrange(16); cx, cy = cell % 4, cell // 4
             u0, v0 = cx / 4, 1 - (cy + 1) / 4
-            uvs += [(u0 + 0.25, v0), (u0 + 0.25, v0 + 0.25), (u0, v0 + 0.25), (u0, v0)]
+            # base da folha na borda inferior da célula, ponta na superior
+            uvs += [(u0, v0), (u0 + 0.25, v0), (u0 + 0.25, v0 + 0.25), (u0, v0 + 0.25)]
     lf = mesh_obj(name + "_folhas", verts, faces, mat or M["folha"])
     uvl = lf.data.uv_layers.new(name="UVMap")
     for li in range(len(uvl.data)):
@@ -264,7 +265,7 @@ def palm_fronds(name, M, base, n=12, length=1.1, seed=1, rise=0.6):
                 kk = len(verts)
                 verts += [q0, q1, q1 + d * ll, q0 + d * ll]
                 faces.append((kk, kk + 1, kk + 2, kk + 3))
-                uvs += [(0.6, 0.0), (0.65, 0.0), (0.65, 0.25), (0.6, 0.25)]
+                uvs += [(0.07, 0.76), (0.18, 0.76), (0.18, 0.99), (0.07, 0.99)]
     lf = mesh_obj(name + "_foliolos", verts, faces, M["folha"])
     uvl = lf.data.uv_layers.new(name="UVMap")
     for li in range(len(uvl.data)):

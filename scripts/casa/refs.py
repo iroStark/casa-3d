@@ -34,7 +34,7 @@ def plane_from_image(name, path, x0, x1, y0, y1, z, C):
 
 def build():
     C = coll("00_Referencias_PDF")
-    p = os.path.join(PAGES, "p-001.png")
+    p = os.path.join(ROOT, "source", "ref_folha02_sem_carimbo.png")  # carimbo (nomes/contatos) apagado
     if os.path.exists(p):
         W, H = 1491, 1055
         sx, sy = 33.333, 34.37

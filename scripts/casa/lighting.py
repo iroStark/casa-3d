@@ -155,7 +155,7 @@ def build(L):
         d = cylinder(f"Balizador_{k}_luz", 0.045, 0.03, (x, y, 0.38), 16, M["led"]); d["luz"] = 1
         point(f"L_balizador_{k}", (x, y, 0.45), 4, C=CX, radius=0.03)
     # árvores com uplight
-    for k, (x, y) in enumerate([(11.8, 5.4), (3.0, -15.7), (18.4, -14.2), (-6.8, 4.6)]):
+    for k, (x, y) in enumerate([(1.5, 5.3), (3.0, -15.7), (18.4, -14.2), (-6.8, 4.6)]):
         spot(f"L_arvore_{k}", (x + 0.6, y - 0.6, 0.05), 60, 50, C=CX, radius=0.05, target=(x, y, 4.0))
     set_coll(CS)
     world("dia")

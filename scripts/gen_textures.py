@@ -269,23 +269,49 @@ def grass(name, seed, n=2048):
     img = lerp(img, np.tile(dry, (n, n, 1)), np.clip((d - 0.7) * 2, 0, 0.4))
     save(name + "_col", img)
 
-def leaf_atlas(name, seed, n=1024):
-    """Atlas RGBA de folhas (4x4) para vegetação em cartões."""
+def leaf_atlas(name, seed, n=2048):
+    """Atlas RGBA 4x4: 8 folhas lanceoladas isoladas + 8 raminhos com 5–9 folhas pequenas."""
     r = rng(seed)
     rgba = np.zeros((n, n, 4), np.float32)
     cell = n // 4
-    yy, xx = np.meshgrid(np.linspace(-1, 1, cell), np.linspace(-1, 1, cell), indexing="ij")
+    def leaf(canvas, cx, cy, L, W, ang, col):
+        # folha lanceolada com ponta, nervura central e laterais
+        h, w = canvas.shape[:2]
+        yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+        ca, sa = math.cos(ang), math.sin(ang)
+        u = ((xx - cx) * ca + (yy - cy) * sa) / L          # ao longo da folha (0 base .. 1 ponta)
+        v = (-(xx - cx) * sa + (yy - cy) * ca) / W
+        prof = np.clip(np.sin(np.clip(u, 0, 1) * math.pi) ** 0.75 * (1 - 0.35 * u), 0, 1)
+        m = (u > 0) & (u < 1) & (np.abs(v) < prof)
+        nerv = (np.abs(v) < 0.045) & m
+        lat = (np.abs(np.sin((u * 9 - np.abs(v) * 2.2) * math.pi)) < 0.12) & m & (np.abs(v) < prof * 0.85)
+        shade = 0.82 + 0.25 * (1 - np.abs(v)) - 0.12 * u
+        c = np.array(col, np.float32)
+        canvas[m, :3] = (c[None] * shade[m][:, None])
+        canvas[lat, :3] *= 1.12
+        canvas[nerv, :3] = canvas[nerv, :3] * 0.6 + np.array([0.55, 0.62, 0.35]) * 0.4
+        canvas[m, 3] = 1.0
     for i in range(16):
-        cy, cx = divmod(i, 4)
-        w = 0.28 + 0.2 * r.random(); L = 0.92
-        shape = (xx / w) ** 2 + (yy / L) ** 2 * (1 + 0.6 * yy) < 1.0
-        vein = np.abs(xx) < 0.02
-        g = np.array([0.12 + 0.1 * r.random(), 0.25 + 0.15 * r.random(), 0.08 + 0.05 * r.random()])
-        col = np.tile(g, (cell, cell, 1)) * (0.8 + 0.4 * (yy[..., None] * 0.3 + 0.5))
-        col[vein] *= 1.35
-        sl = (slice(cy * cell, (cy + 1) * cell), slice(cx * cell, (cx + 1) * cell))
-        rgba[sl][..., :3] = col
-        rgba[sl][..., 3] = shape.astype(np.float32)
+        cy_, cx_ = divmod(i, 4)
+        tile = np.zeros((cell, cell, 4), np.float32)
+        hue = r.random()
+        base = np.array([0.10 + 0.08 * hue, 0.22 + 0.12 * r.random(), 0.06 + 0.05 * r.random()])
+        if i < 8:
+            leaf(tile, cell * 0.5, cell * 0.96, cell * 0.92, cell * 0.20 * (0.7 + 0.5 * r.random()), -math.pi / 2, base)
+        else:
+            # raminho: haste fina + folhas alternadas
+            yy, xx = np.mgrid[0:cell, 0:cell]
+            stem = (np.abs(xx - cell * 0.5) < 2) & (yy > cell * 0.1)
+            tile[stem, :3] = [0.25, 0.2, 0.12]; tile[stem, 3] = 1
+            k = r.integers(5, 10)
+            for j in range(k):
+                t = 0.15 + 0.8 * j / k
+                side = 1 if j % 2 else -1
+                ang = -math.pi / 2 + side * (0.6 + 0.4 * r.random())
+                col = base * (0.85 + 0.35 * r.random())
+                leaf(tile, cell * 0.5, cell * (1 - t * 0.9), cell * 0.38, cell * 0.09, ang, col)
+            leaf(tile, cell * 0.5, cell * 0.14, cell * 0.14, cell * 0.06, -math.pi / 2, base)
+        rgba[cy_ * cell:(cy_ + 1) * cell, cx_ * cell:(cx_ + 1) * cell] = tile
     img = bpy.data.images.new(name + "_col", n, n, alpha=True)
     img.pixels.foreach_set(rgba[::-1].ravel())
     img.filepath_raw = os.path.join(OUT, name + "_col.png"); img.file_format = "PNG"
@@ -324,6 +350,8 @@ def art(name, seed, palette, n=1024, kind="abstract"):
 SEEDS = {}
 def main():
     print("Gerando texturas em", OUT)
+    if "--so-folhas" in sys.argv:
+        leaf_atlas("leaves", 93); return
     # Carvalho natural claro-mel (piso social e íntimo): tábuas 20 cm, 2048 px = 2,40 m
     wood_planks("oak_floor", 11, srgb((150, 104, 64)), srgb((206, 162, 110)), 256, [1000, 1300, 1600], 1.6)
     # Cumaru (deck da piscina): réguas 14 cm, 2048 px = 2,0 m

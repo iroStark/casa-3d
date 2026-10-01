@@ -17,3 +17,5 @@ web/public/modelo/
 .DS_Store
 .claude/
 textures/
+exports/*.blend
+*.blend1
