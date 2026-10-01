@@ -1,0 +1,30 @@
+CASA 3D — MODELO BLENDER (casa_empacotado.blend)
+Blender 5.2.2 LTS · texturas embutidas (File > External Data já empacotado) · unidades em metros
+
+Origem (0,0,0) = cruzamento dos eixos estruturais 1 e A, no piso acabado.
++X = leste, +Y = norte (norte suposto no topo da prancha; ver docs/PROCESSO.md).
+
+COLEÇÕES
+  CASA
+    02_Paredes_e_Pilares ........ arquitetura documentada (propriedades 'status' e 'fonte' em cada objeto)
+    03_Estrutura_Vigas .......... vigas 20x30 e pilares (folha de fundação + cortes)
+    04_Esquadrias ............... panos de vidro, portas (gire o Empty *_pivo_folha para abrir/fechar)
+    05_Pisos_e_Forros ........... pisos, forro a 3,05 m, sancas com LED, rodapés
+    06_Laje_e_Cobertura ......... laje maciça 15,35 x 13,10 m e regularização com caimento (hipótese 1%)
+    09_Mobiliario_e_Decoracao_PROPOSTA ... ambientação (não é projeto), por ambiente
+    12_Iluminacao / 12b / 12c ... emissores, luzes internas (planta elétrica) e externas
+    13_Sol_e_Ceu ................ sol (o script de render alterna dia/entardecer)
+    14_Cameras .................. 48 câmeras fixas (CAM_E01... CAM_P03) + CAM_PERCURSO (animação, 1–1741)
+  ENTORNO ....................... lote 30 x 25 m, piscina 2,50 x 9,50 m, muro (hipótese), paisagismo (proposta)
+  00_Referencias_PDF ............ folha 02 (sem carimbo) alinhada aos eixos, oculta no render
+
+RENDER
+  Cycles + GPU (Metal), AgX "Medium High Contrast", denoise OIDN.
+  Os modos de luz (dia, entardecer, interiores sem janela, planta 3D) são aplicados por
+  scripts/render_stills.py — no repositório: https://github.com/iroStark/casa-3d
+  Vidros e água usam "Light Path" para deixar a luz do sol atravessar (saída CYCLES);
+  a saída EEVEE do material mantém o vidro físico.
+
+PERCURSO
+  CAM_PERCURSO tem chaves de posição a cada 2 quadros e segue o Empty ALVO_PERCURSO
+  (restrição Track To). O trajeto foi conferido por ray cast: não atravessa superfícies.

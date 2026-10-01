@@ -49,21 +49,21 @@ CAMS = [
     dict(id="S202", amb="Suíte 2", loc=(8.05, -10.85, 1.45), alvo=(5.6, -7.2), lente=20, shift=0.02, modo="dia"),
     dict(id="S203", amb="Suíte 2 (detalhe)", loc=(6.65, -9.30, 1.40), alvo=(8.3, -10.2, 1.30), lente=30, shift=0.0, modo="dia", pitch=True),
     # ---------------- BANHEIROS
-    dict(id="B01", amb="Banheiro da suíte 2", loc=(8.64, -8.18, 1.55), alvo=(9.75, -6.55), lente=16, shift=0.0, modo="banho"),
-    dict(id="B02", amb="Banheiro da suíte 2", loc=(9.62, -7.22, 1.60), alvo=(8.55, -6.25), lente=16, shift=0.0, modo="banho"),
-    dict(id="B03", amb="Banheiro da suíte 1", loc=(9.66, -10.78, 1.55), alvo=(8.70, -8.95), lente=16, shift=0.0, modo="banho"),
-    dict(id="B04", amb="Banheiro da suíte 1", loc=(8.78, -9.85, 1.60), alvo=(9.55, -11.20), lente=16, shift=0.0, modo="banho"),
-    dict(id="B05", amb="WC social", loc=(7.25, -4.45, 1.55), alvo=(7.20, -2.95), lente=16, shift=0.0, modo="banho"),
-    dict(id="B06", amb="WC social", loc=(8.15, -3.15, 1.55), alvo=(6.80, -4.55), lente=16, shift=0.0, modo="banho"),
+    dict(id="B01", amb="Banheiro da suíte 2 (parede em corte)", loc=(6.95, -7.30, 1.50), alvo=(10.5, -7.30), lente=24, shift=0.0, modo="banho", clip=1.58),
+    dict(id="B02", amb="Banheiro da suíte 2 (parede em corte)", loc=(9.15, -5.05, 1.50), alvo=(9.15, -9.0), lente=30, shift=0.0, modo="banho", clip=1.05),
+    dict(id="B03", amb="Banheiro da suíte 1 (parede em corte)", loc=(11.75, -9.95, 1.50), alvo=(8.0, -9.95), lente=27, shift=0.0, modo="banho", clip=1.98),
+    dict(id="B04", amb="Banheiro da suíte 1 (parede em corte)", loc=(9.15, -12.90, 1.50), alvo=(9.15, -8.5), lente=40, shift=0.0, modo="banho", clip=1.72),
+    dict(id="B05", amb="WC social (parede em corte)", loc=(7.42, -5.55, 1.50), alvo=(7.42, -2.0), lente=22, shift=0.0, modo="banho", clip=0.95),
+    dict(id="B06", amb="WC social (parede em corte)", loc=(10.10, -3.80, 1.50), alvo=(6.0, -3.80), lente=38, shift=0.0, modo="banho", clip=1.86),
     # ---------------- DESPENSA / SERVIÇO / GARAGEM
-    dict(id="X01", amb="Despensa", loc=(8.05, -1.45, 1.55), alvo=(6.6, -2.75), lente=16, shift=0.0, modo="banho"),
-    dict(id="X02", amb="Despensa", loc=(7.0, -2.55, 1.60), alvo=(8.2, -1.30), lente=16, shift=0.0, modo="banho"),
+    dict(id="X01", amb="Despensa (parede em corte)", loc=(10.10, -2.05, 1.50), alvo=(6.0, -2.05), lente=42, shift=0.0, modo="banho", clip=1.86),
+    dict(id="X02", amb="Despensa (parede em corte)", loc=(4.95, -2.05, 1.50), alvo=(9.0, -2.05), lente=38, shift=0.0, modo="banho", clip=1.66),
     dict(id="X03", amb="Área de serviço", loc=(1.9, -13.6, 1.60), alvo=(1.9, -10.2, 1.0), lente=28, shift=0.0, modo="dia", pitch=True),
     dict(id="X04", amb="Área de serviço", loc=(4.9, -12.3, 1.50), alvo=(1.5, -10.25, 1.0), lente=24, shift=0.0, modo="dia", pitch=True),
-    dict(id="X05", amb="Garagem", loc=(13.4, 0.9, 1.60), alvo=(8.5, -3.6), lente=22, shift=0.04, modo="dia"),
+    dict(id="X05", amb="Garagem", loc=(15.6, 1.9, 1.60), alvo=(10.4, -2.6), lente=24, shift=0.06, modo="dia"),
     dict(id="X06", amb="Garagem", loc=(12.7, -4.05, 1.60), alvo=(8.5, -0.4), lente=22, shift=0.04, modo="dia"),
     # ---------------- DETALHES DE MATERIAL
-    dict(id="M01", amb="Detalhe: porta de entrada", loc=(14.7, -4.35, 1.45), alvo=(13.2, -5.45, 1.3), lente=32, shift=0.0, modo="dia", pitch=True),
+    dict(id="M01", amb="Detalhe: porta de entrada", loc=(11.75, -5.40, 1.50), alvo=(13.2, -4.95, 1.35), lente=32, shift=0.0, modo="dia", pitch=True),
     dict(id="M02", amb="Detalhe: borda da piscina e deck", loc=(-3.6, -9.9, 0.9), alvo=(-5.4, -7.0, -0.2), lente=30, shift=0.0, modo="dia", pitch=True),
     dict(id="M03", amb="Detalhe: treliça iluminada", loc=(6.9, -8.6, 1.45), alvo=(5.3, -7.9, 1.3), lente=30, shift=0.0, modo="tarde_int", pitch=True),
     # ---------------- PLANTAS 3D
@@ -77,7 +77,7 @@ def make_camera(c, C):
     cd = bpy.data.cameras.get(name) or bpy.data.cameras.new(name)
     cd.lens = c["lente"]
     cd.sensor_width = 36
-    cd.clip_start = 0.05
+    cd.clip_start = c.get("clip", 0.05)   # >0,05: vista em corte (plano de corte atravessa a parede)
     cd.clip_end = 400
     cd.shift_y = c.get("shift", 0.0)
     if c.get("ortho"):

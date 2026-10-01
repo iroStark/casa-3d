@@ -95,8 +95,8 @@ DOWNLIGHTS = {
     "corredor": [(6.40, -5.35), (8.40, -5.35), (10.40, -5.35), (12.40, -5.35)],
     "suite2": [(6.0, -6.9), (7.6, -6.9), (6.0, -10.3), (7.6, -10.3)],
     "suite1": [(10.7, -6.9), (12.3, -6.9), (10.7, -10.3), (12.3, -10.3)],
-    "wc_s2": [(9.15, -6.55), (9.15, -7.9)],
-    "wc_s1": [(9.15, -9.15), (9.15, -10.6)],
+    "wc_s2": [(9.15, -7.95)],
+    "wc_s1": [(9.15, -10.55)],
     "wc_social": [(7.4, -3.8)],
     "despensa": [(7.4, -2.05)],
 }
@@ -117,6 +117,12 @@ def build(L):
             disc["luz"] = 1
             pw = 22.0 if room.startswith("wc") or room == "despensa" else 14.0
             spot(f"L_spot_{room}_{k}", (x, y, z - 0.012), pw, 80, C=CI, radius=0.02)
+    # painéis difusos de teto nos ambientes sem janela (banheiros e despensa)
+    for nm, (x, y, w, d) in {"wc_s2": (9.15, -7.30, 0.60, 0.40), "wc_s1": (9.15, -9.95, 0.60, 0.40),
+                             "wc_social": (7.42, -3.65, 0.60, 0.40), "despensa": (7.42, -2.05, 0.50, 0.40)}.items():
+        pn = box(f"Painel_LED_{nm}", x - w / 2, x + w / 2, y - d / 2, y + d / 2, 3.035, 3.05, M["led"])
+        pn["luz"] = 1
+        area(f"L_painel_{nm}", (x, y, 3.03), (w, d), 45.0, C=CI)
     for k, (x, y) in enumerate(GARAGE):
         box(f"Plafon_garagem_{k}", x - 0.08, x + 0.08, y - 0.08, y + 0.08, 3.17, 3.20, M["led"])
         spot(f"L_garagem_{k}", (x, y, 3.16), 22, 100, C=CI, radius=0.05)

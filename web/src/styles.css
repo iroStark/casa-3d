@@ -217,3 +217,7 @@ main { position: relative; z-index: 10; }
   .carregando { top: calc(var(--topo-h) + 10px); bottom: auto; padding: 10px 14px 2px; }
   .rolar { display: none; }
 }
+@media (max-width: 760px) {
+  .cartao p:not(.medida) + p:not(.medida) { display: none; }
+  .cartao .medida { font-size: .78rem; }
+}

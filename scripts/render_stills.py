@@ -103,7 +103,7 @@ def apply_mode(mode):
     elif mode == "banho":   # ambientes sem janela: luz artificial completa
         lighting.world("dia"); lighting.sun("dia")
         lights(True, False, 1.0); set_emission(1.0)
-        sc.view_settings.exposure = 0.35
+        sc.view_settings.exposure = -0.15
     elif mode in ("planta", "planta_persp"):
         lighting.world("dia"); lighting.sun("dia")
         lights(False, False); set_emission(0.0)
@@ -113,9 +113,7 @@ def apply_mode(mode):
 t_all = time.time()
 for cid in ids:
     c = CAMS[cid]
-    cam = bpy.data.objects.get("CAM_" + cid)
-    if cam is None:
-        cam = cams.make_camera(c, bpy.data.collections["14_Cameras"])
+    cam = cams.make_camera(c, bpy.data.collections["14_Cameras"])   # sempre sincronizada com casa/cameras.py
     sc.camera = cam
     CUR["interior"] = cid[0] in "IDKCSBX" and cid not in ("X03", "X04")
     apply_mode(c["modo"])
