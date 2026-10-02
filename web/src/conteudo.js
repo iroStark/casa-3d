@@ -25,7 +25,7 @@ export const CAPITULOS = [
     titulo: "O quarto para descansar",
     texto: [
       "A cama encosta na parede leste, como na planta mobiliada do projeto, de frente para o vidro do piso ao teto que dá para o jardim do lado sul.",
-      "Armário em L na entrada, banheiro próprio ao lado e uma poltrona perto da janela para ler antes de dormir."
+      "Cabeceira estofada grafite de parede inteira com luz indireta, armário em L, banheiro próprio ao lado e uma poltrona perto da janela para ler antes de dormir."
     ],
     medida: "<b>Largura:</b> 3,00 m · <b>Vão de vidro:</b> 3,00 × 2,90 m · <b>Banheiro:</b> 1,30 m de largura",
   },
@@ -33,17 +33,17 @@ export const CAPITULOS = [
     id: "suite2", rotulo: "Suíte 2", t0: 26.5, t1: 37, img: "S201",
     titulo: "Um quarto com duas camas",
     texto: [
-      "O projeto prevê duas camas de solteiro. A proposta usa um painel de treliça de madeira com luz indireta na cabeceira, tons rosados e uma penteadeira com espelho em arco.",
+      "O projeto prevê duas camas de solteiro. Atrás delas, uma parede de réguas de madeira com luz indireta; almofadas salmão e uma penteadeira com espelho em arco.",
       "Serve para crianças, para visitas que ficam o fim de semana, ou para virar escritório um dia."
     ],
     medida: "<b>Largura:</b> 3,00 m · <b>Banheiro próprio:</b> 1,30 × 2,45 m",
   },
   {
-    id: "estar", rotulo: "Sala de estar", t0: 37, t1: 42.5, img: "I01",
+    id: "estar", rotulo: "Sala de estar", t0: 37, t1: 42.5, img: "V01",
     titulo: "A sala que olha para a piscina",
     texto: [
       "A parede oeste é quase toda de vidro. À tarde, a luz entra baixa e dourada pela sala, e a piscina aparece logo ali fora.",
-      "O sofá curvo segue o desenho da planta mobiliada e abraça a mesa de centro, com a TV na parede ripada em frente."
+      "Um sofá cinza em L voltado para a TV, embutida num painel liso de madeira com luz no topo — como no vídeo de apresentação do projeto."
     ],
     medida: "<b>Largura:</b> 5,00 m · <b>Panos de vidro a oeste:</b> 2 × ~3,95 m, até 2,90 m de altura",
   },
@@ -51,7 +51,7 @@ export const CAPITULOS = [
     id: "jantar", rotulo: "Jantar e cozinha", t0: 42.5, t1: 56, img: "K01",
     titulo: "O primeiro café, a família à mesa",
     texto: [
-      "Cozinha e jantar dividem o mesmo espaço. A ilha tem cooktop numa ponta e cuba na outra, e um balcão mais alto do lado da mesa para quem quer conversar enquanto o almoço fica pronto.",
+      "Cozinha e jantar dividem o mesmo espaço. A ilha em pedra cinza tem cooktop numa ponta e cuba na outra; sobre a mesa clara, cadeiras azuis e dois pendentes de palha.",
       "A mesa recebe oito pessoas. Ao lado, a despensa e um lavabo completam o apoio da cozinha."
     ],
     medida: "<b>Ilha:</b> 1,10 × 3,35 m · <b>Bancada:</b> 0,90 m · <b>Balcão:</b> 1,10 m (cortes)",
@@ -75,6 +75,7 @@ export const CAPITULOS = [
 ];
 
 export const GALERIA = [
+  ["V01", "Sala", "Jantar, sala e piscina — o enquadramento do vídeo de apresentação"],
   ["E01", "Exterior", "Fachada leste: entrada e garagem coberta"],
   ["E02", "Exterior", "Fachada norte e garagem aberta"],
   ["E03", "Exterior", "Fachada oeste e piscina"],
@@ -118,9 +119,9 @@ export const GALERIA = [
   ["X04", "Apoio", "Área de serviço, lateral"],
   ["X05", "Apoio", "Garagem"],
   ["X06", "Apoio", "Garagem, vista da abertura norte"],
-  ["M01", "Detalhes", "Boiserie e cimalha da sala"],
+  ["M01", "Detalhes", "Pendentes de palha sobre a mesa"],
   ["M02", "Detalhes", "Borda da piscina e deck"],
-  ["M03", "Detalhes", "Treliça iluminada da suíte 2"],
+  ["M03", "Detalhes", "Parede de madeira iluminada da suíte 2"],
   ["P01", "Plantas 3D", "Planta 3D mobiliada"],
   ["P02", "Plantas 3D", "Planta 3D em perspectiva (sudeste)"],
   ["P03", "Plantas 3D", "Planta 3D em perspectiva (noroeste)"],
@@ -172,6 +173,7 @@ export const FIDELIDADE = [
     titulo: "Proposta de ambientação (não é projeto)",
     itens: [
       "Móveis, tecidos, cores, marcenaria, metais, iluminação decorativa, plantas, deck, espreguiçadeiras e árvores — posicionados a partir da planta mobiliada da folha 04.",
+      "Estilo, cores e peças seguem o vídeo de apresentação do mesmo projeto (mesma marca d'água das imagens das págs. 26–28 do PDF): piso amadeirado claro, cadeiras azuis, pendentes de palha, sofá cinza em L, cabeceira grafite, muro verde, deck e piscina turquesa.",
       "Portão e acesso de veículos pelo leste, coerentes com a garagem aberta para esse lado.",
     ],
   },

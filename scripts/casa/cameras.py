@@ -23,6 +23,8 @@ CAMS = [
     dict(id="E10", amb="Piscina ao entardecer", loc=(-7.9, 2.6, 1.60), alvo=(1.0, -7.2), lente=24, shift=0.06, modo="tarde"),
     dict(id="E11", amb="Vista aérea ao entardecer", loc=(27.0, 15.5, 13.5), alvo=(6.0, -5.5, 0.0), lente=32, shift=0.0, modo="aereo_tarde"),
     dict(id="E12", amb="Fachada oeste ao entardecer", loc=(-7.6, -15.6, 1.65), alvo=(0.0, -3.0), lente=26, shift=0.08, modo="tarde"),
+    # ---------------- VISTA DO VÍDEO DE REFERÊNCIA (mesmo enquadramento da abertura do vídeo)
+    dict(id="V01", amb="Jantar, sala e piscina (vista do vídeo)", loc=(3.20, -1.05, 1.35), alvo=(0.0, -7.6), lente=20, shift=0.02, modo="dia"),
     # ---------------- SALA DE ESTAR
     dict(id="I01", amb="Sala de estar", loc=(4.80, -5.30, 1.45), alvo=(1.2, -8.8), lente=22, shift=0.02, modo="dia"),
     dict(id="I02", amb="Sala de estar", loc=(0.55, -9.40, 1.40), alvo=(4.2, -5.0), lente=22, shift=0.02, modo="dia"),
@@ -43,7 +45,7 @@ CAMS = [
     dict(id="S101", amb="Suíte 1", loc=(10.45, -6.55, 1.50), alvo=(12.6, -9.6), lente=20, shift=0.02, modo="dia"),
     dict(id="S102", amb="Suíte 1", loc=(10.25, -10.85, 1.45), alvo=(12.6, -7.2), lente=20, shift=0.02, modo="dia"),
     dict(id="S103", amb="Suíte 1", loc=(12.30, -7.55, 1.50), alvo=(10.1, -10.9), lente=20, shift=0.02, modo="dia"),
-    dict(id="S104", amb="Suíte 1 (detalhe)", loc=(10.85, -8.45, 1.35), alvo=(12.9, -8.1, 0.95), lente=32, shift=0.0, modo="dia", pitch=True),
+    dict(id="S104", amb="Suíte 1 (detalhe)", loc=(10.85, -8.45, 1.35), alvo=(12.9, -8.6, 1.05), lente=28, shift=0.0, modo="dia", pitch=True),
     # ---------------- SUITE 2
     dict(id="S201", amb="Suíte 2", loc=(7.95, -6.45, 1.50), alvo=(5.6, -9.4), lente=20, shift=0.02, modo="dia"),
     dict(id="S202", amb="Suíte 2", loc=(8.05, -10.85, 1.45), alvo=(5.6, -7.2), lente=20, shift=0.02, modo="dia"),
@@ -63,7 +65,7 @@ CAMS = [
     dict(id="X05", amb="Garagem", loc=(15.6, 1.9, 1.60), alvo=(10.4, -2.6), lente=24, shift=0.06, modo="dia"),
     dict(id="X06", amb="Garagem", loc=(12.7, -4.05, 1.60), alvo=(8.5, -0.4), lente=22, shift=0.04, modo="dia"),
     # ---------------- DETALHES DE MATERIAL
-    dict(id="M01", amb="Detalhe: boiserie e cimalha da sala", loc=(3.55, -7.05, 1.40), alvo=(5.10, -8.30, 1.30), lente=35, shift=0.0, modo="dia", pitch=True),
+    dict(id="M01", amb="Detalhe: pendentes de palha sobre a mesa", loc=(2.55, -1.75, 1.50), alvo=(1.35, -2.75, 1.72), lente=32, shift=0.0, modo="dia", pitch=True),
     dict(id="M02", amb="Detalhe: borda da piscina e deck", loc=(-3.6, -9.9, 0.9), alvo=(-5.4, -7.0, -0.2), lente=30, shift=0.0, modo="dia", pitch=True),
     dict(id="M03", amb="Detalhe: treliça iluminada", loc=(6.9, -8.6, 1.45), alvo=(5.3, -7.9, 1.3), lente=30, shift=0.0, modo="tarde_int", pitch=True),
     # ---------------- PLANTAS 3D

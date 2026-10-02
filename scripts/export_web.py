@@ -71,7 +71,7 @@ def cat_of(ob):
     n = ob.name
     if n.startswith(("Laje_", "Cobertura_", "Testeira_")):
         return "WEB_Cobertura"
-    if n.startswith(("Forro_", "Sanca_", "LED_sanca", "Viga_eixo2", "Spot_", "Plafon_")) or "03_Estrutura_Vigas" in names:
+    if n.startswith(("Forro_", "Sanca_", "LED_sanca", "Perfil_LED", "LED_perfil", "Painel_LED", "Viga_eixo2", "Spot_", "Plafon_")) or "03_Estrutura_Vigas" in names:
         return "WEB_Forros"
     if any(c.startswith("01b_") for c in names):
         return "WEB_Piscina"

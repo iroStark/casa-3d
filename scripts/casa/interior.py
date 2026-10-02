@@ -50,19 +50,20 @@ def build(L):
     # ---------------- JANTAR (pág. 3: mesa 8 lugares no sentido N-S)
     TX, TY = 1.40, -3.00
     F.tapete("Tapete_jantar", 2.5, 3.5, M, M["tapete_jantar"], (TX, TY))
-    F.mesa_jantar("Mesa_jantar", M, (TX, TY), 0, L=2.40, W=0.95)
+    F.mesa_jantar_metal("Mesa_jantar", M, (TX, TY), 0, L=2.40, W=0.95)
+    AZ, FE = M["tecido_azul"], M["ferro"]
     for k, y in enumerate((-0.75, 0.0, 0.75)):
-        F.cadeira_jantar(f"Cadeira_O{k}", M, (TX - 0.70, TY + y), 90)
-        F.cadeira_jantar(f"Cadeira_L{k}", M, (TX + 0.70, TY + y), -90)
-    F.cadeira_jantar("Cadeira_N", M, (TX, TY + 1.62), 0)
-    F.cadeira_jantar("Cadeira_S", M, (TX, TY - 1.62), 180)
-    F.pendente_globos("Pendente_globos_jantar", M, (TX, TY, 0), n=7, span=1.7)
-    bpy.data.objects["Pendente_globos_jantar"].rotation_euler.z = math.radians(90)
+        F.cadeira_jantar(f"Cadeira_O{k}", M, (TX - 0.70, TY + y), 90, AZ, FE)
+        F.cadeira_jantar(f"Cadeira_L{k}", M, (TX + 0.70, TY + y), -90, AZ, FE)
+    F.cadeira_jantar("Cadeira_N", M, (TX, TY + 1.62), 0, AZ, FE)
+    F.cadeira_jantar("Cadeira_S", M, (TX, TY - 1.62), 180, AZ, FE)
+    # dois pendentes de palha sobre a mesa (vídeo)
+    G("Pendentes_palha_jantar", F.pendente_palha("Pendente_palha_N", M, TX, TY + 0.55, 1.62) + F.pendente_palha("Pendente_palha_S", M, TX, TY - 0.55, 1.62), "iluminacao")
     F.planta_vaso("Planta_ficus_jantar", M, (0.45, -4.25, 0), h=1.9, pot_r=0.22, kind="ficus", leaves=220, seed=3)
     # ---------------- COZINHA
     G("Ilha_cozinha", F.ilha("Ilha", M, 3.50, 4.60, -4.65, -1.30))
     for k, y in enumerate((-2.20, -3.00, -3.80)):
-        F.banqueta(f"Banqueta{k}", M, (3.02, y), 0)
+        F.banqueta(f"Banqueta{k}", M, (3.02, y), 0, M["tecido_grafite"], M["ferro"])
     G("Coifa_ilha", F.coifa("Coifa", M, 4.15, -1.88))
     G("Marcenaria_nicho", F.torre_nicho("Nicho", M, 5.80, 6.40, -4.65, -1.30))
     F.cristaleira("Cristaleira", M, (5.60, -0.31), 0, w=1.80, d=0.40)
@@ -70,15 +71,18 @@ def build(L):
     set_coll(coll("09b_Sala_Estar", C))
     SX, SY = 2.60, -7.92
     F.tapete("Tapete_estar", 3.4, 2.8, M, M["tapete_sala"], (SX, SY - 0.05))
-    F.sofa_curvo("Sofa_curvo", M, (SX, SY), 180, R0=1.15, ang=100)
-    F.mesa_centro("Mesa_centro", M, (SX, SY - 0.05))
-    F.poltrona("Poltrona_O", M, (0.78, SY - 0.15), 75, M["linho"])
-    F.poltrona("Poltrona_L", M, (4.42, SY - 0.15), -75, M["linho"])
-    F.mesa_lateral("Mesa_lateral_O", M, (0.70, SY - 0.95))
-    F.rack_tv("Painel_TV", M, (SX, -9.765), 180, w=3.2)
+    # sofá cinza em L voltado para a TV (vídeo); chaise a oeste
+    F.sofa_L("Sofa_L", M, (2.55, -6.62), 0, L=3.0, chaise=1.75)
+    F.mesa_centro("Mesa_centro", M, (2.80, -8.15))
+    F.poltrona_concha("Poltrona_concha", M, (4.40, -8.05), -90, M["tecido_azul"])
+    F.mesa_lateral("Mesa_lateral_O", M, (0.62, -7.25))
+    F.rack_tv("Painel_TV", M, (SX, -9.765), 180, w=3.2, ripado=False)
+    G("Painel_madeira_TV", F.painel_madeira("Painel_madeira_TV", M, 0.95, 4.25, -9.80, 0.0, 2.75, face=+1, frisos=0.0))
+    F.luminaria_tripe("Luminaria_tripe", M, (0.55, -6.25, 0))
+    F.vaso_palha("Vaso_palha_1", M, (0.40, -8.75, 0), h=0.85, r=0.22)
+    F.vaso_palha("Vaso_palha_2", M, (0.70, -9.05, 0), h=0.55, r=0.17)
     F.planta_vaso("Planta_palmeira_estar", M, (4.72, -9.40, 0), h=1.7, pot_r=0.2, kind="palmeira", leaves=26, seed=5, pot=M["vaso"])
     F.planta_vaso("Planta_oliveira_estar", M, (0.45, -5.35, 0), h=1.6, pot_r=0.2, kind="oliveira", leaves=420, seed=6, pot=M["ceramica_off"])
-    boiserie("Boiserie_estar", M, "x", 5.10, -9.70, -5.95, face=-1, cols=4)
     F.quadro("Quadro_estar", M, "art_a", 1.10, 0.85, (5.07, -7.85, 1.75), -90)
     # luminária de piso ao lado do sofá
     lp = [cylinder("Luminaria_piso_base", 0.15, 0.02, (0, 0, 0), 32, M["latao"]),
@@ -87,7 +91,8 @@ def build(L):
     from .core import sphere
     b = sphere("Luminaria_piso_lampada", 0.035, (0, 0, 1.55), 12, 8, M["lampada"]); b["luz"] = 1
     lp.append(b)
-    F.place("Luminaria_piso", lp, (0.42, -6.70, 0))
+    for o_ in lp:
+        bpy.data.objects.remove(o_, do_unlink=True)
     # ---------------- CORREDOR / HALL
     set_coll(coll("09c_Corredor_Hall", C))
     F.tapete("Passadeira_corredor", 6.0, 0.75, M, M["tapete_quarto"], (9.55, -5.35))
@@ -99,11 +104,21 @@ def build(L):
     # ---------------- SUITE 2 (pág. 3: duas camas de solteiro) — referência 1 para a atmosfera
     set_coll(coll("09d_Suite2", C))
     G("Armario_suite2", F.guarda_roupa("Armario_S2", M, 5.30, 7.20, -6.65, -6.05, front="-y", mat=M["laca_off"]))
-    G("Painel_trelica_suite2", F.painel_treliça("Trelica_S2", M, 5.30, -9.95, -6.85, 0.0, 2.40))
+    # parede de madeira atrás das camas (vídeo): réguas verticais de 15 cm com LED no topo
+    pr = []
+    y = -9.95
+    k = 0
+    while y < -6.86:
+        pr.append(box(f"Regua_S2_{k}", 5.30, 5.33, y + 0.004, min(y + 0.146, -6.85), 0.0, 2.40, M["carvalho_claro"]))
+        y += 0.15; k += 1
+    pr.append(box("Regua_S2_fundo", 5.296, 5.30, -9.95, -6.85, 0.0, 2.40, M["nogueira"]))
+    led = box("LED_paineL_S2", 5.33, 5.34, -9.93, -6.87, 2.41, 2.42, M["led_forte"]); led["luz"] = 1
+    pr.append(led)
+    G("Painel_madeira_suite2", pr)
     F.tapete("Tapete_suite2", 2.2, 3.0, M, M["tapete_quarto"], (6.75, -8.35))
     for k, y in enumerate((-7.55, -9.15)):
-        F.cama(f"Cama_solteiro_{k+1}", M, (5.36 + 1.0, y), 90, W=0.95, L=2.0, cab_h=1.0, cab_mat=M["boucle"],
-               duvet=M["algodao_areia"], throw=M["linho_rosa"], solteiro=True)
+        F.cama(f"Cama_solteiro_{k+1}", M, (5.33 + 1.0, y), 90, W=0.95, L=2.0, cab_h=1.0, cab_mat=M["tecido_cinza"],
+               duvet=M["linho_branco"], throw=M["tecido_salmao"], solteiro=True)
     F.criado("Criado_suite2", M, (5.60, -8.35), 90, w=0.42, d=0.38, h=0.52, lamp=False, mat=M["carvalho"])
     G("Pendente_suite2", F.pendente_globo("Pendente_S2", M, 5.62, -8.35, 1.55, 0.13))
     F.espelho_arco("Penteadeira_arco", M, (8.27, -10.10), -90, w=0.75, h=1.25)
@@ -112,17 +127,25 @@ def build(L):
     F.planta_vaso("Planta_suite2", M, (5.60, -10.70, 0), h=1.0, pot_r=0.14, kind="palmeira", leaves=16, seed=9, pot=M["ceramica_off"])
     # ---------------- SUITE 1 (pág. 3: cama de casal com cabeceira a leste, armário em L)
     set_coll(coll("09e_Suite1", C))
-    G("Armario_suite1_norte", F.guarda_roupa("Armario_S1N", M, 11.05, 13.00, -6.65, -6.05, front="-y"))
-    G("Armario_suite1_leste", F.guarda_roupa("Armario_S1L", M, 12.40, 13.00, -7.45, -6.65, front="-x", nportas=2))
-    boiserie("Boiserie_suite1", M, "x", 13.00, -11.0, -7.50, face=-1, cols=4)
+    G("Armario_suite1_norte", F.guarda_roupa("Armario_S1N", M, 11.05, 13.00, -6.65, -6.05, front="-y", mat=M["laca_grafite"]))
+    G("Armario_suite1_leste", F.guarda_roupa("Armario_S1L", M, 12.40, 13.00, -7.45, -6.65, front="-x", nportas=2, mat=M["laca_grafite"]))
+    G("Cabeceira_estofada_suite1", F.cabeceira_estofada("Cabeceira_S1", M, -11.0, -7.50, 13.00, 0.0, 1.30))
+    F.quadro("Quadro_mar_1", M, "art_mar1", 0.75, 0.75, (12.97, -8.72, 1.95), -90, frame=M["laca_grafite"])
+    F.quadro("Quadro_mar_2", M, "art_mar2", 0.75, 0.75, (12.97, -9.58, 1.95), -90, frame=M["laca_grafite"])
+    # TV na parede oposta à cama (vídeo), sobre rack ripado
+    tv = [box("TV_suite1", 10.00, 10.035, -9.55, -8.45, 1.05, 1.68, M["alu_preto"], bevel=0.003),
+          box("TV_suite1_tela", 10.035, 10.037, -9.53, -8.47, 1.07, 1.66, M["tela_tv"]),
+          box("Rack_suite1", 10.00, 10.40, -9.80, -8.20, 0.30, 0.55, M["carvalho_claro"], bevel=0.004)]
+    for k in range(26):
+        y = -9.80 + k * 0.0615
+        tv.append(box(f"Rack_suite1_ripa{k}", 10.40, 10.42, y, y + 0.045, 0.31, 0.54, M["carvalho_claro"]))
+    G("TV_suite1", tv)
     F.tapete("Tapete_suite1", 2.6, 3.2, M, M["tapete_quarto"], (11.55, -9.15), 90)
-    F.cama("Cama_casal", M, (12.98 - 1.025, -9.15), -90, W=1.80, L=2.05, cab_h=1.30, cab_mat=M["linho"],
-           duvet=M["linho_branco"], throw=M["algodao_areia"])
-    F.criado("Criado_S1_N", M, (12.75, -7.78), -90)
-    F.criado("Criado_S1_S", M, (12.75, -10.52), -90)
-    F.banco_peseira("Banco_peseira", M, (10.70, -9.15), 90, w=1.35)
-    F.poltrona("Poltrona_suite1", M, (10.48, -10.55), 145, M["boucle"])
-    F.quadro("Quadro_suite1", M, "art_a", 1.20, 0.80, (12.95, -9.15, 1.95), -90)
+    F.cama("Cama_casal", M, (12.89 - 1.025, -9.15), -90, W=1.80, L=2.05, cab_h=0.45, cab_mat=M["tecido_grafite"],
+           duvet=M["tecido_cinza"], throw=M["tecido_grafite"])
+    F.criado("Criado_S1_N", M, (12.66, -7.78), -90, mat=M["laca_grafite"])
+    F.criado("Criado_S1_S", M, (12.66, -10.52), -90, mat=M["laca_grafite"])
+    F.poltrona_concha("Poltrona_suite1", M, (10.55, -10.50), 145, M["tecido_teal"])
     # ---------------- BANHEIROS (pág. 3: box ao norte em ambos; bacia/lavatório conforme planta)
     set_coll(coll("09f_Banheiros", C))
     G("Box_WC_suite2", F.box_chuveiro("Box_S2", M, 8.50, 9.80, -7.05, -6.05))

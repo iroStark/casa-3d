@@ -42,7 +42,7 @@ EXT_LIGHTS = objs_in("12c_Luzes_Externas")
 EMISSIVE = [m for m in bpy.data.materials if m.get("luz")]
 _emit0 = {m.name: m.node_tree.nodes["Principled BSDF"].inputs["Emission Strength"].default_value for m in EMISSIVE}
 
-CEILING_PREFIX = ("Forro_", "Sanca_", "LED_sanca", "Viga_eixo2", "Laje_", "Cobertura_", "Testeira_", "Spot_", "Plafon_")
+CEILING_PREFIX = ("Forro_", "Sanca_", "LED_sanca", "Perfil_LED", "LED_perfil", "Painel_LED", "Viga_eixo2", "Laje_", "Cobertura_", "Testeira_", "Spot_", "Plafon_")
 _saved = {}
 CUR = {}
 
@@ -91,7 +91,7 @@ def apply_mode(mode):
         lighting.world("dia"); lighting.sun("dia")
         interior = CUR.get("interior", False)
         lights(interior, False, 0.35); set_emission(0.35 if interior else 0.2)
-        sc.view_settings.exposure = 0.55 if interior else -0.95
+        sc.view_settings.exposure = 0.75 if interior else -0.85
     elif mode in ("tarde", "aereo_tarde"):
         lighting.world("tarde"); lighting.sun("tarde")
         lights(True, True); set_emission(1.0)
@@ -115,7 +115,7 @@ for cid in ids:
     c = CAMS[cid]
     cam = cams.make_camera(c, bpy.data.collections["14_Cameras"])   # sempre sincronizada com casa/cameras.py
     sc.camera = cam
-    CUR["interior"] = (cid[0] in "IDKCSBX" and cid not in ("X03", "X04")) or cid == "M01"
+    CUR["interior"] = (cid[0] in "IDKCSBXV" and cid not in ("X03", "X04")) or cid == "M01"
     apply_mode(c["modo"])
     if c["modo"] in ("topo", "planta"):
         sc.render.resolution_x, sc.render.resolution_y = (3200, 3200) if c["modo"] == "planta" else (3840, 3840)

@@ -49,3 +49,10 @@ Ver `data/projeto.json → conflitos`. Principais: cadeias de cotas norte e oest
 - Varredura do `.blend`, do GLB, do IFC, do bundle JS, do HTML e do `projeto.json` publicados contra a lista local de termos do carimbo: nada encontrado. A prancha usada como referência no `.blend` teve o carimbo apagado.
 - Site em produção (`npm run build` + `npm test`): todos os arquivos referenciados existem no `dist`.
 - Navegador: carregamento do GLB, capítulos, menu móvel (Esc e foco), modo de exploração (entrada, cobertura, Esc/retorno), lightbox (setas, fechar, retorno de foco), filtros e downloads — no endereço público, sem autenticação.
+
+## 9. Revisão de estilo a partir do vídeo de apresentação (02/10/2026)
+- Referência: vídeo "Casa Térrea - Moderna, Prática e Confortável" (YouTube), com a mesma marca d'água das imagens das págs. 26–28 do PDF. A vista aérea em corte do vídeo mostra a mesma distribuição (garagem com carro, duas suítes com banheiros entre elas, suíte com duas camas de solteiro, nicho de serviço, piscina na lateral).
+- Só foi possível ver 4 quadros públicos do vídeo (miniatura e quadros automáticos do YouTube).
+- Mudou apenas a **ambientação** (proposta): piso porcelanato amadeirado claro, paredes cinza-claro, caixilhos pretos, forro liso com perfil linear de LED preto, cadeiras azul-petróleo, mesa clara com base preta, dois pendentes de palha, sofá cinza em L, painel liso de madeira na TV, ilha em pedra cinza, suíte 1 com armário grafite, cabeceira estofada grafite com LED e quadros de mar, suíte 2 com parede de réguas de madeira e almofadas salmão, WC social azul-marinho, banheiro da suíte 1 em marmorizado preto, muro coberto de trepadeira, dracenas, poltronas verde-água no terraço, deck claro e piscina turquesa, piso ligando o terraço à piscina (como na pág. 26).
+- A arquitetura (paredes, vãos, alturas, laje, posição da piscina) continua a do PDF. Nova câmera V01 reproduz o enquadramento de abertura do vídeo.
+- Correção encontrada nesta revisão: o plano de gramado do entorno passava acima do fundo da piscina; foi recortado fora do lote.

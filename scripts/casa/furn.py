@@ -124,15 +124,16 @@ def tapete(name, w, d, M, mat, loc, rot=0):
     o = [box(name, -w / 2, w / 2, -d / 2, d / 2, 0.001, 0.014, mat, bevel=0.006, seg=2)]
     return place(name, o, loc, rot)
 
-def rack_tv(name, M, loc, rot=0, w=3.2):
+def rack_tv(name, M, loc, rot=0, w=3.2, ripado=True):
     """Painel ripado de carvalho + rack suspenso + TV 65"."""
     o = []
     # painel ripado (ripas 4 cm, junta 1,5 cm) até a sanca
-    n = int(w / 0.055)
-    for i in range(n):
-        x = -w / 2 + i * 0.055
-        o.append(box(f"{name}_ripa{i}", x, x + 0.04, 0.0, 0.025, 0.0, 2.93, M["carvalho"]))
-    o.append(box(name + "_fundo_ripado", -w / 2, w / 2, 0.025, 0.035, 0.0, 2.93, M["nogueira"]))
+    if ripado:
+        n = int(w / 0.055)
+        for i in range(n):
+            x = -w / 2 + i * 0.055
+            o.append(box(f"{name}_ripa{i}", x, x + 0.04, 0.0, 0.025, 0.0, 2.93, M["carvalho"]))
+        o.append(box(name + "_fundo_ripado", -w / 2, w / 2, 0.025, 0.035, 0.0, 2.93, M["nogueira"]))
     # rack suspenso
     o.append(rb(name + "_rack", -1.20, 1.20, -0.45, 0.0, 0.25, 0.60, M["nogueira"], 0.008))
     for i in range(4):
@@ -322,7 +323,7 @@ def mesa_jantar(name, M, loc, rot=0, L=2.40, W=1.00):
         o.append(cylinder(f"{name}_vela{k}", 0.012, 0.18, (0.05 * (k - 1), y, 0.82 + 0.04 * k), 12, M["ceramica_off"]))
     return place(name, o, loc, rot)
 
-def cadeira_jantar(name, M, loc, rot=0, mat=None):
+def cadeira_jantar(name, M, loc, rot=0, mat=None, leg=None):
     """Cadeira estofada com braços curtos e pés de madeira (referência 2)."""
     mat = mat or M["la_grafite"]
     o = []
@@ -332,7 +333,7 @@ def cadeira_jantar(name, M, loc, rot=0, mat=None):
     o.append(rb(name + "_braco_d", 0.21, 0.29, -0.12, 0.24, 0.50, 0.68, mat, 0.035))
     for x in (-0.21, 0.21):
         for y in (-0.19, 0.18):
-            lg = cylinder(f"{name}_pe{x}{y}", 0.022, 0.45, (x, y, 0), 12, M["carvalho"], r2=0.014)
+            lg = cylinder(f"{name}_pe{x}{y}", 0.018 if leg else 0.022, 0.45, (x, y, 0), 12, leg or M["carvalho"], r2=0.014)
             lg.rotation_euler = (math.copysign(0.08, y), -math.copysign(0.06, x), 0)
             o.append(lg)
     return place(name, o, loc, rot)
@@ -407,13 +408,13 @@ def ilha(name, M, x0, x1, y0, y1):
     o.append(cylinder(name + "_ervas", 0.05, 0.12, (x0 - 0.12, y0 + 1.6, 1.10), 24, M["ceramica_terracota"]))
     return o
 
-def banqueta(name, M, loc, rot=0):
-    o = [cylinder(name + "_assento", 0.20, 0.05, (0, 0, 0.72), 32, M["couro"]),
+def banqueta(name, M, loc, rot=0, seat=None, leg=None):
+    o = [cylinder(name + "_assento", 0.20, 0.05, (0, 0, 0.72), 32, seat or M["couro"]),
          torus(name + "_aro", 0.17, 0.008, (0, 0, 0.30), 32, 8, M["latao"])]
     add_bevel(o[0], 0.015, 3)
     for k in range(4):
         a = k * math.pi / 2 + math.pi / 4
-        lg = cylinder(f"{name}_pe{k}", 0.014, 0.74, (0.17 * math.cos(a), 0.17 * math.sin(a), 0), 10, M["nogueira"], r2=0.016)
+        lg = cylinder(f"{name}_pe{k}", 0.012, 0.74, (0.17 * math.cos(a), 0.17 * math.sin(a), 0), 10, leg or M["nogueira"], r2=0.014)
         lg.rotation_euler = (-math.sin(a) * 0.08, math.cos(a) * 0.08, 0)
         o.append(lg)
     return place(name, o, loc, rot)
@@ -767,3 +768,159 @@ def cortina(name, M, mat, a0, a1, line, along_x, inner_sign, z0=0.01, z1=2.94, f
     sol = ob.modifiers.new("Espessura", "SOLIDIFY"); sol.thickness = 0.003
     ob["categoria"] = "proposta"
     return ob
+
+# ================================================================ ESTILO DO VÍDEO DE REFERÊNCIA (proposta)
+def lathe(name, prof, mat, seg=48, loc=(0, 0, 0), closed_top=False):
+    """Sólido de revolução a partir de um perfil [(raio, z), ...]."""
+    vs, fs = [], []
+    n = len(prof)
+    for i in range(seg):
+        a = 2 * math.pi * i / seg
+        for r, z in prof:
+            vs.append((r * math.cos(a) + loc[0], r * math.sin(a) + loc[1], z + loc[2]))
+    for i in range(seg):
+        j = (i + 1) % seg
+        for k in range(n - 1):
+            fs.append((i * n + k, j * n + k, j * n + k + 1, i * n + k + 1))
+    ob = mesh_obj(name, vs, fs, mat)
+    for p in ob.data.polygons:
+        p.use_smooth = True
+    return ob
+
+def sofa_L(name, M, loc, rot=0, L=3.0, chaise=1.7, D=0.95, mat=None):
+    """Sofá cinza em L (o braço da chaise fica no lado -X local, avançando para -Y)."""
+    mat = mat or M["tecido_cinza"]
+    o = []
+    o.append(rb(name + "_base", -L / 2, L / 2, -D / 2, D / 2, 0.08, 0.42, mat, 0.03))
+    o.append(rb(name + "_chaise", -L / 2, -L / 2 + D, -D / 2 - (chaise - D), -D / 2 + 0.02, 0.08, 0.42, mat, 0.03))
+    o.append(rb(name + "_encosto", -L / 2, L / 2, D / 2 - 0.22, D / 2, 0.42, 0.82, mat, 0.05))
+    o.append(rb(name + "_braco", L / 2 - 0.18, L / 2, -D / 2, D / 2, 0.42, 0.62, mat, 0.05))
+    n = 3
+    for i in range(n):
+        x0 = -L / 2 + 0.02 + i * (L - 0.22) / n
+        o.append(cushion(f"{name}_assento{i}", (L - 0.22) / n - 0.03, D - 0.28, 0.14, mat, (x0 + (L - 0.22) / n / 2, -0.10, 0.48)))
+        c = cushion(f"{name}_costas{i}", (L - 0.22) / n - 0.05, 0.20, 0.42, mat, (x0 + (L - 0.22) / n / 2, D / 2 - 0.3, 0.68))
+        c.rotation_euler = (math.radians(-10), 0, 0); o.append(c)
+    o.append(cushion(name + "_assento_chaise", D - 0.06, chaise - 0.1, 0.14, mat, (-L / 2 + D / 2, -D / 2 - (chaise - D) / 2 + 0.02, 0.48)))
+    for k, (x, m) in enumerate(((-0.6, M["linho_branco"]), (-0.15, M["tecido_teal"]), (0.55, M["linho_branco"]), (0.95, M["tecido_salmao"]))):
+        c = cushion(f"{name}_almofada{k}", 0.45, 0.14, 0.42, m, (x, D / 2 - 0.42, 0.78))
+        c.rotation_euler = (math.radians(-15), 0, math.radians(6 * (k - 1.5))); o.append(c)
+    for x in (-L / 2 + 0.06, L / 2 - 0.06):
+        for y in (-D / 2 + 0.06, D / 2 - 0.06):
+            o.append(box(f"{name}_pe{x}{y}", x - 0.02, x + 0.02, y - 0.02, y + 0.02, 0, 0.08, M["ferro"]))
+    return place(name, o, loc, rot)
+
+def pendente_palha(name, M, x, y, z_base, r=0.32, h=0.42, ceiling=3.05):
+    """Pendente em palha trançada em forma de sino (vídeo)."""
+    prof = [(0.03, h), (r * 0.35, h * 0.92), (r * 0.62, h * 0.7), (r * 0.85, h * 0.4), (r, h * 0.08), (r * 1.02, 0.0)]
+    o = [lathe(name + "_cupula", prof, M["palha"], 48, (x, y, z_base)),
+         cylinder(name + "_cabo", 0.004, ceiling - z_base - h, (x, y, z_base + h), 6, M["alu_preto"]),
+         cylinder(name + "_canopla", 0.06, 0.02, (x, y, ceiling - 0.02), 24, M["alu_preto"])]
+    sol = o[0].modifiers.new("Espessura", "SOLIDIFY"); sol.thickness = 0.006
+    b = sphere(name + "_lampada", 0.04, (x, y, z_base + h * 0.45), 12, 8, M["lampada"]); b["luz"] = 1
+    o.append(b)
+    return o
+
+def mesa_jantar_metal(name, M, loc, rot=0, L=2.40, W=1.00):
+    o = [rb(name + "_tampo", -W / 2, W / 2, -L / 2, L / 2, 0.72, 0.76, M["carvalho_claro"], 0.004)]
+    for y in (-L / 2 + 0.25, L / 2 - 0.25):
+        o.append(box(f"{name}_trav_sup{y}", -W / 2 + 0.08, W / 2 - 0.08, y - 0.025, y + 0.025, 0.69, 0.72, M["ferro"]))
+        o.append(box(f"{name}_trav_inf{y}", -W / 2 + 0.08, W / 2 - 0.08, y - 0.025, y + 0.025, 0.0, 0.03, M["ferro"]))
+        for x in (-W / 2 + 0.08, W / 2 - 0.08):
+            o.append(box(f"{name}_pe{x}{y}", x - 0.025, x + 0.025, y - 0.025, y + 0.025, 0.0, 0.72, M["ferro"]))
+    # centro de mesa do vídeo: dois cachepôs de vidro com plantas
+    for k, yy in enumerate((-0.25, 0.25)):
+        o.append(box(f"{name}_cachepo{k}", -0.08, 0.08, yy - 0.08, yy + 0.08, 0.76, 0.92, M["vidro_globo"]))
+        o += foliage(f"{name}_mudas{k}", M, [(0, yy, 0.98)], 0.10, 0.04, 40, 0.06, 70 + k, droop=-0.6)
+    return place(name, o, loc, rot)
+
+def poltrona_concha(name, M, loc, rot=0, mat=None):
+    mat = mat or M["tecido_azul"]
+    o = [annulus(name + "_concha", 0.30, 0.36, math.radians(-20), math.radians(200), 0.42, 0.88, mat, 32, 0.03),
+         cushion(name + "_assento", 0.62, 0.55, 0.12, mat, (0, -0.02, 0.44), r=0.06)]
+    o[0].scale = (1.0, 0.9, 1.0)
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        lg = cylinder(f"{name}_pe{k}", 0.014, 0.40, (0.24 * math.cos(a), 0.24 * math.sin(a), 0), 10, M["ferro"])
+        o.append(lg)
+    return place(name, o, loc, rot)
+
+def luminaria_tripe(name, M, loc, h=1.55):
+    o = []
+    for k in range(3):
+        a = 2 * math.pi * k / 3
+        lg = cylinder(f"{name}_perna{k}", 0.012, h * 0.92, (0.28 * math.cos(a), 0.28 * math.sin(a), 0), 10, M["carvalho_claro"])
+        d = Vector((-0.28 * math.cos(a), -0.28 * math.sin(a), h * 0.88)).normalized()
+        lg.rotation_euler = d.to_track_quat("Z", "Y").to_euler()
+        o.append(lg)
+    o.append(cylinder(name + "_cupula", 0.24, 0.32, (0, 0, h - 0.05), 40, M["linho_branco"], r2=0.22, cap=False))
+    b = sphere(name + "_lampada", 0.035, (0, 0, h + 0.08), 12, 8, M["lampada"]); b["luz"] = 1
+    o.append(b)
+    return place(name, o, loc)
+
+def poltrona_barril(name, M, loc, rot=0, mat=None):
+    """Poltrona externa arredondada verde-água (vídeo / pág. 26)."""
+    mat = mat or M["tecido_teal"]
+    o = [annulus(name + "_corpo", 0.30, 0.45, math.radians(-30), math.radians(210), 0.0, 0.70, mat, 40, 0.08),
+         cylinder(name + "_base", 0.42, 0.40, (0, 0, 0), 40, mat),
+         cushion(name + "_assento", 0.62, 0.55, 0.16, mat, (0, -0.04, 0.46), r=0.07),
+         cushion(name + "_almofada1", 0.42, 0.14, 0.34, M["linho_branco"], (-0.08, 0.18, 0.66)),
+         cushion(name + "_almofada2", 0.32, 0.12, 0.26, M["tecido_salmao"], (0.12, 0.12, 0.62))]
+    add_bevel(o[1], 0.06, 3)
+    o[3].rotation_euler = (math.radians(-15), 0, 0)
+    return place(name, o, loc, rot)
+
+def vaso_palha(name, M, loc, h=0.75, r=0.22):
+    prof = [(0.0, 0.0), (r * 0.6, 0.0), (r, h * 0.35), (r * 0.95, h * 0.65), (r * 0.55, h * 0.92), (r * 0.5, h)]
+    ob = lathe(name, prof, M["palha"], 40)
+    sol = ob.modifiers.new("Espessura", "SOLIDIFY"); sol.thickness = 0.008
+    return place(name, [ob], loc)
+
+def painel_madeira(name, M, x0, x1, y_face, z0, z1, face=+1, mat=None, frisos=0.0, led=True):
+    """Painel liso de lâmina de madeira na parede (opcionalmente com frisos verticais) e LED no topo."""
+    mat = mat or M["carvalho_claro"]
+    t = 0.03
+    ya, yb = (y_face, y_face + face * t) if face > 0 else (y_face + face * t, y_face)
+    o = [box(name + "_painel", x0, x1, min(ya, yb), max(ya, yb), z0, z1, mat)]
+    if frisos:
+        n = int((x1 - x0) / frisos)
+        for k in range(1, n):
+            x = x0 + k * frisos
+            yf = max(ya, yb) if face > 0 else min(ya, yb)
+            o.append(box(f"{name}_friso{k}", x - 0.004, x + 0.004, yf - 0.002 if face > 0 else yf, yf if face > 0 else yf + 0.002, z0, z1, M["nogueira"]))
+    if led:
+        yl = (max(ya, yb) + 0.005) if face > 0 else (min(ya, yb) - 0.008)
+        L_ = box(name + "_led", x0 + 0.05, x1 - 0.05, yl, yl + 0.003, z1 - 0.02, z1 - 0.005, M["led_forte"]); L_["luz"] = 1
+        o.append(L_)
+    return o
+
+def cabeceira_estofada(name, M, y0, y1, x_wall, z0=0.0, z1=1.25, mat=None):
+    """Painel estofado de parede inteira (gomos horizontais) com LED acima — parede leste (face -X)."""
+    mat = mat or M["tecido_grafite"]
+    o = []
+    n = 4
+    for k in range(n):
+        za = z0 + 0.35 + k * (z1 - z0 - 0.35) / n
+        zb = za + (z1 - z0 - 0.35) / n - 0.01
+        o.append(rb(f"{name}_gomo{k}", x_wall - 0.09, x_wall, y0, y1, za, zb, mat, 0.035, 4))
+    o.append(box(name + "_base", x_wall - 0.06, x_wall, y0, y1, z0, z0 + 0.35, mat))
+    L_ = box(name + "_led", x_wall - 0.10, x_wall - 0.095, y0 + 0.05, y1 - 0.05, z1 + 0.01, z1 + 0.02, M["led_forte"]); L_["luz"] = 1
+    o.append(L_)
+    o.append(box(name + "_prateleira", x_wall - 0.12, x_wall, y0, y1, z1, z1 + 0.025, M["laca_grafite"]))
+    return o
+
+def dracena(name, M, loc, h=3.2, troncos=4, seed=1):
+    """Dracena/iúca de vários troncos com rosetas de folhas finas (vídeo)."""
+    rr = random.Random(seed)
+    o = []
+    for t in range(troncos):
+        a = rr.random() * 2 * math.pi
+        lean = rr.uniform(0.1, 0.35)
+        H = h * rr.uniform(0.6, 1.0)
+        d = Vector((math.cos(a) * lean, math.sin(a) * lean, 1)).normalized()
+        tr = cylinder(f"{name}_tronco{t}", 0.07, H, (0, 0, 0), 10, M["tronco"], r2=0.045)
+        tr.rotation_euler = d.to_track_quat("Z", "Y").to_euler()
+        o.append(tr)
+        top = d * H
+        o += palm_fronds(f"{name}_roseta{t}", M, (top.x, top.y, top.z - 0.1), n=14, length=0.75, seed=seed * 13 + t, rise=0.9)
+    return place(name, o, loc, nota="Vegetação: proposta (vídeo)")

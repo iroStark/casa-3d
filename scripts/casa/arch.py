@@ -49,10 +49,12 @@ def inside_footprint(x, y):
 
 def wall_face_material(L, x, y, z):
     r = room_at(x, y)
-    if r in ("wc_s2", "wc_s1", "wc_social"):
+    if r == "wc_social":
+        return L["azulejo_marinho"]
+    if r == "wc_s1":
+        return L["nero"]
+    if r == "wc_s2":
         return L["parede_banho"]
-    if r == "suite2":
-        return L["parede_rosa"]
     if r in ("garagem", "servico"):
         return L["parede_ext"]
     if r is not None:
@@ -339,25 +341,20 @@ def ceilings(L, C, CL):
         if not sanca:
             o.append(box("Forro_" + nm, x0, x1, y0, y1, Z_FORRO, Z_FORRO + 0.02, f, C))
             continue
-        b = 0.28; g = 0.06
-        o.append(box("Forro_" + nm, x0 + b + g, x1 - b - g, y0 + b + g, y1 - b - g, Z_FORRO, Z_FORRO + 0.02, f, C))
-        # sanca rebaixada 10 cm (2,95) — também esconde trilho de cortina junto aos vidros
-        zb = Z_FORRO - 0.10
-        o.append(box("Sanca_" + nm + "_N", x0, x1, y1 - b, y1, zb, Z_FORRO + 0.02, f, C))
-        o.append(box("Sanca_" + nm + "_S", x0, x1, y0, y0 + b, zb, Z_FORRO + 0.02, f, C))
-        o.append(box("Sanca_" + nm + "_O", x0, x0 + b, y0 + b, y1 - b, zb, Z_FORRO + 0.02, f, C))
-        o.append(box("Sanca_" + nm + "_L", x1 - b, x1, y0 + b, y1 - b, zb, Z_FORRO + 0.02, f, C))
-        # fecho superior da fenda (acima do LED) para não vazar luz para a laje
-        o.append(box("Forro_topo_" + nm, x0 + b, x1 - b, y0 + b, y1 - b, Z_FORRO + 0.10, Z_FORRO + 0.12, f, C))
-        # fita LED escondida sobre a borda interna da sanca
-        led = L["led"]
-        e = 0.012
-        for side, (ax0, ax1, ay0, ay1) in {
-            "N": (x0 + b, x1 - b, y1 - b - e, y1 - b), "S": (x0 + b, x1 - b, y0 + b, y0 + b + e),
-            "O": (x0 + b, x0 + b + e, y0 + b, y1 - b), "L": (x1 - b - e, x1 - b, y0 + b, y1 - b)}.items():
-            lo = box(f"LED_sanca_{nm}_{side}", ax0, ax1, ay0, ay1, Z_FORRO + 0.02, Z_FORRO + 0.03, led, CL)
-            lo["categoria"] = "iluminacao"; lo["fonte"] = "Planta elétrica pág. 5 (LEDs)"
-            o.append(lo)
+        # forro liso + perfil linear de LED preto embutido em retângulo (vídeo / planta elétrica)
+        o.append(box("Forro_" + nm, x0, x1, y0, y1, Z_FORRO, Z_FORRO + 0.02, f, C))
+        ins = 0.55; w = 0.035
+        rx0, rx1, ry0, ry1 = x0 + ins, x1 - ins, y0 + ins, y1 - ins
+        if rx1 - rx0 > 0.3 and ry1 - ry0 > 0.3:
+            for side, (ax0, ax1, ay0, ay1) in {"N": (rx0, rx1, ry1 - w, ry1), "S": (rx0, rx1, ry0, ry0 + w),
+                                               "O": (rx0, rx0 + w, ry0 + w, ry1 - w), "L": (rx1 - w, rx1, ry0 + w, ry1 - w)}.items():
+                pf = box(f"Perfil_LED_{nm}_{side}", ax0, ax1, ay0, ay1, Z_FORRO - 0.004, Z_FORRO + 0.001, L["alu_preto"], C)
+                pf["categoria"] = "iluminacao"; o.append(pf)
+                cx0, cx1 = (ax0 + 0.01, ax1 - 0.01) if side in "NS" else (ax0 + 0.011, ax1 - 0.011)
+                cy0, cy1 = (ay0 + 0.011, ay1 - 0.011) if side in "NS" else (ay0, ay1)
+                lo = box(f"LED_perfil_{nm}_{side}", cx0, cx1, cy0, cy1, Z_FORRO - 0.006, Z_FORRO - 0.004, L["led"], CL)
+                lo["categoria"] = "iluminacao"; lo["luz"] = 1; lo["fonte"] = "Planta elétrica pág. 5 (LEDs) — perfil linear (vídeo)"
+                o.append(lo)
     # viga do eixo 2 revestida em gesso sob o forro (corte A/A mostra o forro contornando a viga)
     o.append(box("Viga_eixo2_revestida", 5.10, 5.30, -5.85, -0.10, 2.90, Z_FORRO, f, C))
     for x in o:

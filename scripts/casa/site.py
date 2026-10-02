@@ -100,20 +100,20 @@ def build(L):
     # ---------------- gramado com furos (terraço, piscina, acesso)
     terr = (( -1.60, 14.70), (-12.55, 1.55))
     drive = ((14.70, LOT_X[1]), (-4.85, 0.40))
-    holes = [terr, (SURR["x"], SURR["y"]), drive]
+    holes = [terr, (SURR["x"], SURR["y"]), drive, ((SURR["x"][1], terr[0][0]), SURR["y"])]
     g = []
     for k, ((a, b), (c, d)) in enumerate(rect_minus((LOT_X, LOT_Y), holes)):
         g.append(box(f"Gramado_{k}", a, b, c, d, -0.30, -0.08, M["grama"]))
     tag(g, "P (lote: C 30 x 25)")
     # ---------------- terraço em pedra sob o beiral (H: largura do passeio)
-    t = [box("Terraco_pedra", terr[0][0], terr[0][1], terr[1][0], terr[1][1], -0.30, -0.05, M["piso_externo"])]
+    t = [box("Terraco_pedra", terr[0][0], terr[0][1], terr[1][0], terr[1][1], -0.30, -0.05, M["concreto_claro"])]
     tag(t, "H (passeio ao redor da casa; contorno tracejado da pág. 2)", "acabamento")
     # ---------------- acesso de veículos (P) e caminho até a piscina
     a = [box("Acesso_veiculos", drive[0][0], drive[0][1], drive[1][0], drive[1][1], -0.30, -0.05, M["calcada"])]
     for k in range(5):
         x = -1.60 - 0.30 - k * 0.0
-    for k, y in enumerate((-3.2, -4.0, -4.8, -5.6, -6.4)):
-        a.append(box(f"Pisante_{k}", -3.10, -1.75, y - 0.30, y + 0.30, -0.10, -0.06, M["piso_externo"]))
+    # piso cimentício claro ligando o terraço ao entorno da piscina (pág. 26 / vídeo)
+    a.append(box("Piso_ligacao_piscina", SURR["x"][1], terr[0][0], SURR["y"][0], SURR["y"][1], -0.30, -0.05, M["concreto_claro"]))
     tag(a, "P")
     # ---------------- piscina 2,50 x 9,50 (C) — casco com profundidade real (H 1,40)
     set_coll(coll("01b_Piscina", root))
@@ -142,13 +142,13 @@ def build(L):
     cop.append(box("Entorno_O", sx0, px0 - cw, sy0, sy1, -0.30, -0.05, M["piso_externo"]))
     cop.append(box("Entorno_N", px0 - cw, sx1, py1 + cw, sy1, -0.30, -0.05, M["piso_externo"]))
     cop.append(box("Entorno_S", px0 - cw, sx1, sy0, py0 - cw, -0.30, -0.05, M["piso_externo"]))
-    deck = box("Deck_cumaru", px1 + cw, sx1, py0 - cw, py1 + cw, -0.30, -0.04, M["deck"])
+    deck = box("Deck_madeira", px1 + cw, sx1, py0 - cw, py1 + cw, -0.30, -0.04, M["deck"])
     deck["status"] = "P (pág. 26 mostra deck; folha 02 mostra apenas contorno)"
     tag([shell, water] + steps, "C 2,50 x 9,50 (pág. 2) / posição G / profundidade H", "arquitetura")
     tag(cop, "G contorno / P material", "acabamento")
-    lounger("Espreguicadeira_1", M, (-3.85, -2.5), 180)
-    lounger("Espreguicadeira_2", M, (-3.85, -4.0), 180)
-    F.mesa_lateral("Mesa_piscina", M, (-3.80, -3.25), h=0.45)
+    lounger("Espreguicadeira_1", M, (-4.75, -10.55), 90)
+    lounger("Espreguicadeira_2", M, (-6.45, -10.55), 90)
+    F.mesa_lateral("Mesa_piscina", M, (-5.60, -10.55), h=0.45)
     # guarda-sol
     gs = [cylinder("Guarda_sol_haste", 0.025, 2.4, (-3.75, -6.0, -0.05), 12, M["deck"]),
           cylinder("Guarda_sol_lona", 1.3, 0.35, (-3.75, -6.0, 2.05), 24, M["linho_branco"], r2=0.05),
@@ -181,6 +181,18 @@ def build(L):
         e = F.planta_vaso(f"Vaso_palmeira_fachada_{k+1}", M, (x, y, -0.05), h=1.5, pot_r=0.24, kind="palmeira", leaves=22, seed=40 + k, pot=M["vaso"])
         e["status"] = "X — vasos com palmeiras desenhados nas fachadas CAD (pág. 1)"
         e["categoria"] = "paisagismo"
+    # vídeo: muro coberto de trepadeira (faces internas), dracenas, poltronas verde-água no terraço
+    (lx0, lx1), (ly0, ly1) = LOT_X, LOT_Y
+    t_ = 0.04
+    verde = [box("Trepadeira_muro_N", lx0 + 0.15, lx1 - 0.15, ly1 - 0.15 - t_, ly1 - 0.15, -0.08, 2.05, M["muro_verde"]),
+             box("Trepadeira_muro_S", lx0 + 0.15, lx1 - 0.15, ly0 + 0.15, ly0 + 0.15 + t_, -0.08, 2.05, M["muro_verde"]),
+             box("Trepadeira_muro_O", lx0 + 0.15, lx0 + 0.15 + t_, ly0 + 0.15, ly1 - 0.15, -0.08, 2.05, M["muro_verde"])]
+    tag(verde, "P — muro verde do vídeo de referência")
+    for k, (x, y, h) in enumerate([(-3.0, 0.6, 3.4), (-7.5, -12.4, 3.0), (-0.5, -14.6, 2.8), (-7.6, 3.8, 3.2)]):
+        F.dracena(f"Dracena_{k}", M, (x, y, -0.06), h=h, troncos=4, seed=60 + k)
+    F.poltrona_barril("Poltrona_terraco_1", M, (-0.95, -4.35), 90)
+    F.poltrona_barril("Poltrona_terraco_2", M, (-0.95, -5.45), 90)
+    F.vaso_palha("Vaso_palha_terraco", M, (-0.55, -3.55, -0.05), h=0.8, r=0.22)
     # árvores (P): ipê-amarelo e sombreiros
     tree("Arvore_ipe_amarelo_NE", M, (1.5, 5.3), h=6.5, crown=2.6, seed=21, flowers=M["flor_amarela"], leaves=6000)
     tree("Arvore_sombra_SO", M, (3.0, -15.7), h=7.0, crown=3.0, seed=22, leaves=7000)
@@ -196,5 +208,7 @@ def build(L):
     set_coll(C)
     street = [box("Calcada_publica", LOT_X[1], LOT_X[1] + 2.5, LOT_Y[0] - 4, LOT_Y[1] + 4, -0.30, -0.02, M["calcada"]),
               box("Rua", LOT_X[1] + 2.5, LOT_X[1] + 10, LOT_Y[0] - 4, LOT_Y[1] + 4, -0.40, -0.17, M["impermeab"]),
-              box("Entorno_vizinho", LOT_X[0] - 400, LOT_X[1] + 400, LOT_Y[0] - 400, LOT_Y[1] + 400, -0.52, -0.42, M["grama_campo"])]
+]
+    for k, ((a0, a1), (b0, b1)) in enumerate(rect_minus(((LOT_X[0] - 400, LOT_X[1] + 400), (LOT_Y[0] - 400, LOT_Y[1] + 400)), [((LOT_X[0], LOT_X[1] + 10), (LOT_Y[0] - 4, LOT_Y[1] + 4))])):
+        street.append(box(f"Entorno_vizinho_{k}", a0, a1, b0, b1, -0.52, -0.42, M["grama_campo"]))
     tag(street, "H — contexto genérico fora do lote (rua a leste suposta pelo acesso da garagem)")

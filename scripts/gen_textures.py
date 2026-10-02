@@ -248,11 +248,11 @@ def rug(name, seed, base, accent, border, n=2048, pattern="classic"):
     save(name + "_col", img)
 
 # -------------------------------------------------------------- outros
-def pool_tiles(name, seed, n=1024):
+def pool_tiles(name, seed, n=1024, base_c=(110, 178, 180), var_c=(70, 140, 150)):
     r = rng(seed)
     t = 32  # pastilha 2,5 cm em 0,8 m
     img = np.zeros((n, n, 3), np.float32)
-    base = srgb((110, 178, 180)); var = srgb((70, 140, 150))
+    base = srgb(base_c); var = srgb(var_c)
     for y in range(0, n, t):
         for x in range(0, n, t):
             img[y:y + t, x:x + t] = lerp(base[None, None], var[None, None], np.array([[r.random()]]))
@@ -347,9 +347,89 @@ def art(name, seed, palette, n=1024, kind="abstract"):
             img[m] = srgb(palette[k % len(palette)])
     save(name + "_col", img)
 
+
+def rattan(name, seed, n=1024):
+    """Palha/rattan trançado (pendentes, vasos)."""
+    xx, yy = np.meshgrid(np.arange(n), np.arange(n))
+    p = 24
+    a = (np.sin((xx + yy) * math.pi * 2 / p) > 0.15)
+    b = (np.sin((xx - yy) * math.pi * 2 / p) > 0.15)
+    f = periodic_noise(n, 64, seed, 3)
+    base = srgb((196, 160, 110)); dark = srgb((120, 88, 52))
+    t = np.where(a & b, 0.85, np.where(a | b, 0.6, 0.0)) + (f - 0.5) * 0.3
+    img = lerp(np.tile(dark, (n, n, 1)), np.tile(base, (n, n, 1)), t)
+    alpha = ((a | b)).astype(np.float32)
+    rgba = np.ones((n, n, 4), np.float32); rgba[..., :3] = img; rgba[..., 3] = alpha
+    im = bpy.data.images.new(name + "_col", n, n, alpha=True)
+    im.pixels.foreach_set(rgba[::-1].ravel()); im.filepath_raw = os.path.join(OUT, name + "_col.png"); im.file_format = "PNG"
+    im.alpha_mode = "STRAIGHT"; im.save(); bpy.data.images.remove(im); print("  tex", name)
+
+def hedge(name, seed, n=2048):
+    """Muro verde (trepadeira/cerca viva densa) vista de frente — tileável (bordas dobradas)."""
+    r = rng(seed)
+    P = 64
+    img = np.zeros((n + P, n + P, 3), np.float32)
+    hgt = np.zeros((n + P, n + P), np.float32)
+    yy, xx = np.mgrid[0:P, 0:P].astype(np.float32) / (P / 2) - 1
+    N = 26000
+    for k in range(N):
+        cx, cy = r.integers(0, n), r.integers(0, n)
+        ang = r.random() * math.pi
+        ca, sa = math.cos(ang), math.sin(ang)
+        u = xx * ca + yy * sa; v = -xx * sa + yy * ca
+        m = (u * u / 0.55 + v * v / 0.18) < 1
+        g = np.array([0.08 + 0.10 * r.random(), 0.20 + 0.16 * r.random(), 0.05 + 0.06 * r.random()], np.float32)
+        sh = (0.75 + 0.35 * (1 - (u * u + v * v)))[m][:, None]
+        img[cy:cy + P, cx:cx + P][m] = g * sh
+        hgt[cy:cy + P, cx:cx + P][m] = k / N
+    # dobra as bordas excedentes para o início (repetição sem emenda)
+    for arr in (img, hgt):
+        ext = arr[n:, :].copy(); m = (ext.sum(-1) if ext.ndim == 3 else ext) > 0
+        arr[:P][m] = ext[m]
+        ext = arr[:, n:].copy(); m = (ext.sum(-1) if ext.ndim == 3 else ext) > 0
+        arr[:, :P][m] = ext[m]
+    img = img[:n, :n]; hgt = hgt[:n, :n]
+    img = np.where(img.sum(-1, keepdims=True) == 0, np.array([0.04, 0.08, 0.03]), img)
+    save(name + "_col", img)
+    save(name + "_nrm", normal_from_height(hgt, 6.0), "Non-Color")
+
+def sea_art(name, seed, n=1024):
+    xx, yy = np.meshgrid(np.linspace(0, 1, n), np.linspace(0, 1, n))
+    f = stretch_noise(n, 4, 64, seed, 4)
+    sky = lerp(np.tile(srgb((150, 185, 210)), (n, n, 1)), np.tile(srgb((70, 120, 170)), (n, n, 1)), yy * 1.6)
+    sea = lerp(np.tile(srgb((40, 90, 140)), (n, n, 1)), np.tile(srgb((15, 45, 85)), (n, n, 1)), (yy - 0.45) * 2 + (f - 0.5) * 0.5)
+    img = np.where((yy < 0.45)[..., None], sky, sea)
+    save(name + "_col", img)
+
+def video_set():
+    # piso porcelanato amadeirado claro (régua 20 x 120)
+    wood_planks("oak_light", 16, srgb((178, 150, 118)), srgb((222, 200, 168)), 256, [1000, 1200, 1500], 1.6, gaps=True)
+    stone_tiles("navy_tile", 36, srgb((32, 52, 82)), srgb((44, 66, 100)), 256, 512, srgb((200, 200, 196)), 3, pores=False)
+    marble("nero", 24, srgb((28, 28, 30)), srgb((170, 165, 160)), srgb((60, 58, 56)), sharp=12)
+    marble("pedra_cinza", 25, srgb((178, 176, 170)), srgb((140, 138, 132)), srgb((160, 158, 152)), scale=6, sharp=3, density=0.3)
+    plaster("plaster_gray", 45, srgb((214, 212, 206)), 0.03)
+    plaster("plaster_greige", 46, srgb((206, 196, 180)), 0.06)
+    fabric("fabric_blue", 67, srgb((58, 92, 120)), srgb((46, 78, 104)), 4, slub=0.2)
+    fabric("fabric_teal", 68, srgb((70, 120, 112)), srgb((56, 104, 96)), 4, slub=0.2)
+    fabric("fabric_gray", 69, srgb((176, 176, 172)), srgb((154, 154, 150)), 4, slub=0.2)
+    fabric("fabric_charcoal", 70, srgb((70, 70, 72)), srgb((58, 58, 60)), 4, slub=0.15)
+    fabric("fabric_salmon", 71, srgb((226, 150, 130)), srgb((206, 132, 114)), 4, slub=0.2)
+    wood_veneer("oak_pale", 17, srgb((190, 160, 120)), srgb((226, 204, 170)), 6, 0.7)
+    wood_planks("deck_gray", 18, srgb((150, 122, 96)), srgb((196, 168, 136)), 128, [900, 1300, 1700], 2.24)
+    concrete("concrete_light", 53, srgb((210, 206, 198)))
+    rattan("rattan", 94)
+    hedge("hedge", 95)
+    sea_art("art_mar1", 105); sea_art("art_mar2", 106)
+
 SEEDS = {}
 def main():
     print("Gerando texturas em", OUT)
+    if "--pool" in sys.argv:
+        pool_tiles("pool_tiles_aqua", 96, base_c=(56, 188, 214), var_c=(28, 160, 200)); return
+    if "--hedge" in sys.argv:
+        hedge("hedge", 95); return
+    if "--video" in sys.argv:
+        video_set(); return
     if "--so-folhas" in sys.argv:
         leaf_atlas("leaves", 93); return
     # Carvalho natural claro-mel (piso social e íntimo): tábuas 20 cm, 2048 px = 2,40 m
