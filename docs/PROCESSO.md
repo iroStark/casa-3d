@@ -27,10 +27,25 @@ Ver `data/projeto.json → conflitos`. Principais: cadeias de cotas norte e oest
 | 09 Mobiliário e Decoração | Ambientação | P (sobre a planta mobiliar da folha 04) |
 | 11 Paisagismo | Vasos nas fachadas (X) e árvores/maciços (P) | X/P |
 | 12 Iluminação | Pontos da planta elétrica (posições aproximadas), LEDs de sanca, beiral | G/P |
-| 13 Sol e Céu, 14 Câmeras | Luz natural, 48 câmeras fixas + CAM_PERCURSO | — |
+| 13 Sol e Céu, 14 Câmeras | Luz natural, 49 câmeras fixas + CAM_PERCURSO | — |
 | 00 Referências PDF | Folha 02 como plano de conferência (oculto no render) | — |
 
 ## 6. Técnico × visualização
 - **IFC4** (`exports/casa.ifc`, IfcOpenShell 0.8.4): paredes com aberturas subtraídas, portas, janelas, lajes, pilares, vigas, espaços e piscina, com `Pset_Reconstrucao` (fonte/status). Validado: 0 erros de schema; 104 geometrias geradas sem falha. Não é um BIM executivo: não há famílias, camadas construtivas nem quantitativos.
 - **Revit (.rvt)**: não produzido — o Revit não está disponível neste ambiente (macOS sem Autodesk). O IFC pode ser vinculado/importado no Revit.
 - **Blender**: modelo de visualização com a mesma base geométrica + ambientação proposta.
+
+## 7. Imagens, vídeo e site
+- 49 câmeras fixas, todas renderizadas do mesmo `blender/casa.blend` em 3840 × 2160 (plantas e cobertura em 3200–3840 px quadrados), Cycles/Metal, 48–64 amostras + OIDN. Interiores com câmera nivelada e deslocamento de lente (verticais retas), lentes 20–40 mm.
+- Banheiros e despensa não têm janela no projeto: são mostrados como **vistas com a parede cortada** (plano de corte da câmera atravessando a parede vizinha), identificadas assim nas legendas.
+- Vídeo: `CAM_PERCURSO` renderizada no Cycles a 1280 × 720, 12 quadros reais por segundo, interpolados para 24 q/s no ffmpeg (minterpolate). O EEVEE foi testado e descartado (interiores escuros e azulados; 29 s/quadro).
+- Site: Vite + three.js; GLB de 4,7 MB (Draco + WebP) exportado do mesmo `.blend`; percurso da rolagem = `data/percurso.json` (o mesmo do vídeo).
+
+## 8. Validações executadas
+- Sobreposição do corte do modelo a 1,50 m sobre a folha 02 (`docs/validacao_planta_overlay.png`).
+- `scripts/validate_tour.py`: ray cast quadro a quadro (1.741 quadros) — 0 travessias e folga ≥ 0,18 m (folhas de plantas excluídas da folga). Rodado após cada rebuild.
+- IFC: 0 erros de schema (ifcopenshell.validate), 104/104 geometrias geradas.
+- `.blend` empacotado aberto isoladamente em outra pasta: 59 imagens, todas embutidas; 50 câmeras; percurso 1–1741 com animação.
+- Varredura do `.blend`, do GLB, do IFC, do bundle JS, do HTML e do `projeto.json` publicados contra a lista local de termos do carimbo: nada encontrado. A prancha usada como referência no `.blend` teve o carimbo apagado.
+- Site em produção (`npm run build` + `npm test`): todos os arquivos referenciados existem no `dist`.
+- Navegador: carregamento do GLB, capítulos, menu móvel (Esc e foco), modo de exploração (entrada, cobertura, Esc/retorno), lightbox (setas, fechar, retorno de foco), filtros e downloads — no endereço público, sem autenticação.

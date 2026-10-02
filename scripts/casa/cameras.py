@@ -63,7 +63,7 @@ CAMS = [
     dict(id="X05", amb="Garagem", loc=(15.6, 1.9, 1.60), alvo=(10.4, -2.6), lente=24, shift=0.06, modo="dia"),
     dict(id="X06", amb="Garagem", loc=(12.7, -4.05, 1.60), alvo=(8.5, -0.4), lente=22, shift=0.04, modo="dia"),
     # ---------------- DETALHES DE MATERIAL
-    dict(id="M01", amb="Detalhe: porta de entrada", loc=(11.75, -5.40, 1.50), alvo=(13.2, -4.95, 1.35), lente=32, shift=0.0, modo="dia", pitch=True),
+    dict(id="M01", amb="Detalhe: boiserie e cimalha da sala", loc=(3.55, -7.05, 1.40), alvo=(5.10, -8.30, 1.30), lente=35, shift=0.0, modo="dia", pitch=True),
     dict(id="M02", amb="Detalhe: borda da piscina e deck", loc=(-3.6, -9.9, 0.9), alvo=(-5.4, -7.0, -0.2), lente=30, shift=0.0, modo="dia", pitch=True),
     dict(id="M03", amb="Detalhe: treliça iluminada", loc=(6.9, -8.6, 1.45), alvo=(5.3, -7.9, 1.3), lente=30, shift=0.0, modo="tarde_int", pitch=True),
     # ---------------- PLANTAS 3D

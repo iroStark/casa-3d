@@ -1,9 +1,10 @@
 // Teste do build de produção: todo arquivo referenciado pelo site existe em dist/.
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { GALERIA, PLANTAS, DOWNLOADS, CAPITULOS } from "../src/conteudo.js";
 
-const dist = new URL("../dist/", import.meta.url).pathname;
+const dist = fileURLToPath(new URL("../dist/", import.meta.url));
 const falhas = [];
 const ok = (cond, msg) => { if (!cond) falhas.push(msg); };
 const tem = (rel, min = 1) => {
@@ -15,7 +16,7 @@ tem("index.html");
 const html = readFileSync(join(dist, "index.html"), "utf8");
 ok(/<script type="module"[^>]+src="[^"]+\.js"/.test(html), "index.html sem script do bundle");
 // termos privados do carimbo ficam numa lista local fora do repositório (source/termos_privados.txt)
-const listaPriv = new URL("../../source/termos_privados.txt", import.meta.url).pathname;
+const listaPriv = fileURLToPath(new URL("../../source/termos_privados.txt", import.meta.url));
 const privados = existsSync(listaPriv) ? readFileSync(listaPriv, "utf8").split(/\r?\n/).filter(Boolean) : [];
 const vaza = (txt) => privados.filter((t) => txt.toLowerCase().includes(t.toLowerCase()));
 ok(vaza(html).length === 0, "dados do carimbo no HTML");

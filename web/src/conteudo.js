@@ -12,7 +12,7 @@ export const CAPITULOS = [
     medida: "<b>Laje de cobertura:</b> 15,35 × 13,10 m · <b>Terreno:</b> 30 × 25 m",
   },
   {
-    id: "entrada", rotulo: "Entrada", t0: 9, t1: 16.5, img: "M01",
+    id: "entrada", rotulo: "Entrada", t0: 9, t1: 16.5, img: "C02",
     titulo: "A porta e o corredor",
     texto: [
       "A porta de entrada abre para um corredor que distribui a casa: à direita ficam as suítes, à frente a sala, e no caminho um aparador com espelho para deixar as chaves.",
@@ -118,7 +118,7 @@ export const GALERIA = [
   ["X04", "Apoio", "Área de serviço, lateral"],
   ["X05", "Apoio", "Garagem"],
   ["X06", "Apoio", "Garagem, vista da abertura norte"],
-  ["M01", "Detalhes", "Porta de entrada"],
+  ["M01", "Detalhes", "Boiserie e cimalha da sala"],
   ["M02", "Detalhes", "Borda da piscina e deck"],
   ["M03", "Detalhes", "Treliça iluminada da suíte 2"],
   ["P01", "Plantas 3D", "Planta 3D mobiliada"],

@@ -115,7 +115,7 @@ for cid in ids:
     c = CAMS[cid]
     cam = cams.make_camera(c, bpy.data.collections["14_Cameras"])   # sempre sincronizada com casa/cameras.py
     sc.camera = cam
-    CUR["interior"] = cid[0] in "IDKCSBX" and cid not in ("X03", "X04")
+    CUR["interior"] = (cid[0] in "IDKCSBX" and cid not in ("X03", "X04")) or cid == "M01"
     apply_mode(c["modo"])
     if c["modo"] in ("topo", "planta"):
         sc.render.resolution_x, sc.render.resolution_y = (3200, 3200) if c["modo"] == "planta" else (3840, 3840)

@@ -14,7 +14,7 @@ COLEÇÕES
     09_Mobiliario_e_Decoracao_PROPOSTA ... ambientação (não é projeto), por ambiente
     12_Iluminacao / 12b / 12c ... emissores, luzes internas (planta elétrica) e externas
     13_Sol_e_Ceu ................ sol (o script de render alterna dia/entardecer)
-    14_Cameras .................. 48 câmeras fixas (CAM_E01... CAM_P03) + CAM_PERCURSO (animação, 1–1741)
+    14_Cameras .................. 49 câmeras fixas (CAM_E01... CAM_P03) + CAM_PERCURSO (animação, 1–1741)
   ENTORNO ....................... lote 30 x 25 m, piscina 2,50 x 9,50 m, muro (hipótese), paisagismo (proposta)
   00_Referencias_PDF ............ folha 02 (sem carimbo) alinhada aos eixos, oculta no render
 
