@@ -1,0 +1,868 @@
+{
+  "meta": {
+    "titulo": "Residência Unifamiliar — reconstrução 3D",
+    "fonte_unica_arquitetura": "source/projeto.pdf (Planta_Completa_editada_quintal_piscina_corrigida_v2 2.pdf, 28 páginas, raster)",
+    "revisao_principal": "Folhas CAD 01–08 de ARQUITECTURA datadas 12/06/2026 (páginas 1–6 e 23–24 do PDF) + folha 02 editada com piscina (página 2). Páginas 26–28 são imagens de apresentação com marca d'água e nota 'medidas aproximadas' — usadas só como apoio, nunca como cota.",
+    "unidades": "metros",
+    "origem": "(0,0,0) = cruzamento dos eixos estruturais 1 e A, no nível do piso acabado interno (0,00)",
+    "orientacao": "+X = leste (direita da planta), +Y = norte (topo da planta). Norte da prancha de apresentação (pág. 27) aponta para o topo; as folhas CAD não trazem seta de norte -> HIPÓTESE.",
+    "legenda_status": {
+      "C": "cotado no PDF (número legível)",
+      "G": "inferido graficamente (medido em pixel sobre a prancha, ancorado nos eixos cotados)",
+      "X": "cruzado entre vistas (planta + fachada/corte/cobertura concordam)",
+      "H": "hipótese técnica (não documentado; escolha conservadora)",
+      "P": "proposta de ambientação (decoração, não é arquitetura)"
+    },
+    "paginas": {
+      "1": "Folha 08 — Planta de Alçados (4 fachadas)",
+      "2": "Folha 02 — Planta de Distribuição e Cotas (editada: lote 30x25 m e piscina 2,50x9,50 m)",
+      "3": "Folha 04 — Planta Mobiliar",
+      "4": "Folha ?? — Planta de Rede de Esgoto",
+      "5": "Planta de Rede Eléctrica (pontos de luz, LEDs, tomadas)",
+      "6": "Folha 03 — Planta de Cortes (A/A e B/B)",
+      "7-22": "Pormenores estruturais de vigas e lajes",
+      "23": "Folha 01 — Planta de Fundação (eixos 1–7 e A–G cotados)",
+      "24": "Folha 05 — Planta de Cobertura (laje com 4 águas leves)",
+      "25": "Pormenores de pilares/sapatas",
+      "26-28": "Imagens de apresentação (planta humanizada, fachadas ilustrativas, planta cotada aproximada)"
+    }
+  },
+  "eixos": {
+    "X": {
+      "1": 0.0,
+      "2": 5.2,
+      "3": 8.4,
+      "6": 9.9,
+      "7": 13.1
+    },
+    "Y": {
+      "A": 0.0,
+      "B": -4.75,
+      "C": -4.85,
+      "D": -5.95,
+      "E": -9.9,
+      "F": -11.15
+    },
+    "fonte": "pág. 23 (fundação): 5,20 / 3,20 / 1,50 / 3,20 (C) ; 4,85 / 5,05 à esquerda (C) ; 4,75 / 1,20 à direita (C)",
+    "nota_F": "Cota D->F = 5,00 (F=-10,95), mas fundação, cobertura e planta de cotas medem graficamente F≈-11,13. Adotado -11,15 (X). Suite fica com ~5,00 m livres, coerente com pág. 28 (5,20 aproximado)."
+  },
+  "niveis": [
+    {
+      "nome": "Terreno / passeio externo",
+      "z": -0.05,
+      "status": "H"
+    },
+    {
+      "nome": "Piso acabado interno",
+      "z": 0.0,
+      "status": "C",
+      "fonte": "cortes pág. 6"
+    },
+    {
+      "nome": "Topo de portas internas",
+      "z": 2.1,
+      "status": "C",
+      "fonte": "cortes A/A e B/B"
+    },
+    {
+      "nome": "Topo dos panos de vidro / fundo das vigas",
+      "z": 2.9,
+      "status": "C",
+      "fonte": "cortes: 2,90 + 0,30"
+    },
+    {
+      "nome": "Teto falso (forro)",
+      "z": 3.05,
+      "status": "C",
+      "fonte": "corte A/A 3,05 e corte B/B 3,05"
+    },
+    {
+      "nome": "Face inferior da laje",
+      "z": 3.2,
+      "status": "C"
+    },
+    {
+      "nome": "Face superior da laje maciça",
+      "z": 3.4,
+      "status": "C",
+      "fonte": "3,40 total e 0,20 laje"
+    }
+  ],
+  "laje_cobertura": {
+    "tipo": "Laje maciça plana com caimento leve em 4 águas (pág. 24: 'inclinação das águas na laje será levemente acentuada')",
+    "x": [
+      -1.125,
+      14.225
+    ],
+    "y": [
+      -12.05,
+      1.05
+    ],
+    "espessura": 0.2,
+    "status": "C (15,35 x 13,10) + G (posição: beiral ~1,0 m em todos os lados, medido em pág. 2 e 24)",
+    "caimento": "1% para as quatro bordas — H (inclinação não cotada)"
+  },
+  "paredes": {
+    "espessura_externa": {
+      "valor": 0.2,
+      "status": "C"
+    },
+    "espessura_divisorias_bloco_despensa_wc": {
+      "valor": 0.15,
+      "status": "G"
+    },
+    "lista": [
+      {
+        "id": "PAR-N1",
+        "x": [
+          -0.1,
+          0.65
+        ],
+        "y": [
+          -0.1,
+          0.1
+        ],
+        "status": "X"
+      },
+      {
+        "id": "PAR-W1",
+        "x": [
+          -0.1,
+          0.1
+        ],
+        "y": [
+          -0.7,
+          -0.1
+        ],
+        "status": "X"
+      },
+      {
+        "id": "PAR-N2",
+        "x": [
+          4.6,
+          6.6
+        ],
+        "y": [
+          -0.1,
+          0.1
+        ],
+        "status": "C 2,00"
+      },
+      {
+        "id": "PIL-A3",
+        "x": [
+          8.3,
+          8.5
+        ],
+        "y": [
+          -0.1,
+          0.1
+        ],
+        "status": "C 0,20"
+      },
+      {
+        "id": "PIL-A7",
+        "x": [
+          12.8,
+          13.2
+        ],
+        "y": [
+          -0.1,
+          0.1
+        ],
+        "status": "C 0,40 (pilar 40x20)"
+      },
+      {
+        "id": "PIL-C1",
+        "x": [
+          -0.1,
+          0.1
+        ],
+        "y": [
+          -5.05,
+          -4.65
+        ],
+        "status": "C 0,40 (pilar 20x40)"
+      },
+      {
+        "id": "PAR-W2",
+        "x": [
+          -0.1,
+          0.1
+        ],
+        "y": [
+          -10.0,
+          -9.0
+        ],
+        "status": "C 0,90"
+      },
+      {
+        "id": "SERV-N",
+        "x": [
+          0.7,
+          4.5
+        ],
+        "y": [
+          -10.0,
+          -9.8
+        ],
+        "status": "X"
+      },
+      {
+        "id": "SERV-W",
+        "x": [
+          0.7,
+          0.9
+        ],
+        "y": [
+          -10.5,
+          -10.0
+        ],
+        "status": "X"
+      },
+      {
+        "id": "SERV-E",
+        "x": [
+          4.3,
+          4.5
+        ],
+        "y": [
+          -10.5,
+          -10.0
+        ],
+        "status": "X"
+      },
+      {
+        "id": "SERV-DIV",
+        "x": [
+          2.9,
+          3.1
+        ],
+        "y": [
+          -10.5,
+          -10.0
+        ],
+        "status": "C 1,20/0,60/1,20"
+      },
+      {
+        "id": "SERV-STUB",
+        "x": [
+          2.1,
+          2.25
+        ],
+        "y": [
+          -10.3,
+          -10.0
+        ],
+        "status": "G"
+      },
+      {
+        "id": "PAR-D",
+        "x": [
+          5.1,
+          13.2
+        ],
+        "y": [
+          -6.05,
+          -5.85
+        ],
+        "status": "C 2,20 / 0,80 / 2,10 / 0,80 / 2,20"
+      },
+      {
+        "id": "PAR-EIXO2",
+        "x": [
+          5.1,
+          5.3
+        ],
+        "y": [
+          -11.25,
+          -6.05
+        ],
+        "status": "X"
+      },
+      {
+        "id": "PAR-EIXO3-WC",
+        "x": [
+          8.3,
+          8.5
+        ],
+        "y": [
+          -11.45,
+          -6.05
+        ],
+        "vao": "PT-04",
+        "status": "X"
+      },
+      {
+        "id": "PAR-EIXO6-WC",
+        "x": [
+          9.8,
+          10.0
+        ],
+        "y": [
+          -11.45,
+          -6.05
+        ],
+        "vao": "PT-05",
+        "status": "X"
+      },
+      {
+        "id": "PAR-WC-DIV",
+        "x": [
+          8.5,
+          9.8
+        ],
+        "y": [
+          -8.65,
+          -8.5
+        ],
+        "status": "G (2,45 livres no WC superior: C)"
+      },
+      {
+        "id": "PAR-WC-S",
+        "x": [
+          8.5,
+          9.8
+        ],
+        "y": [
+          -11.45,
+          -11.25
+        ],
+        "status": "C saliência 0,20"
+      },
+      {
+        "id": "PAR-EIXO7",
+        "x": [
+          13.0,
+          13.2
+        ],
+        "y": [
+          -11.25,
+          -6.05
+        ],
+        "status": "X"
+      },
+      {
+        "id": "PAR-B",
+        "x": [
+          5.8,
+          13.2
+        ],
+        "y": [
+          -4.85,
+          -4.65
+        ],
+        "status": "X (vão PT-06 com verga)"
+      },
+      {
+        "id": "PAR-H",
+        "x": [
+          6.4,
+          6.55
+        ],
+        "y": [
+          -4.65,
+          -1.3
+        ],
+        "status": "G (nicho 3,35: C)"
+      },
+      {
+        "id": "PAR-CAP",
+        "x": [
+          5.8,
+          8.3
+        ],
+        "y": [
+          -1.3,
+          -1.15
+        ],
+        "status": "G (vão PT-07 com verga)"
+      },
+      {
+        "id": "PAR-DESP-WC",
+        "x": [
+          6.55,
+          8.3
+        ],
+        "y": [
+          -2.95,
+          -2.8
+        ],
+        "status": "G"
+      },
+      {
+        "id": "PAR-EIXO3-GAR",
+        "x": [
+          8.3,
+          8.5
+        ],
+        "y": [
+          -4.65,
+          -1.15
+        ],
+        "status": "X"
+      },
+      {
+        "id": "PAR-ENTRADA",
+        "x": [
+          13.0,
+          13.2
+        ],
+        "y": [
+          -5.85,
+          -4.85
+        ],
+        "status": "C vão 1,00 (só verga acima da porta)"
+      },
+      {
+        "id": "SERV-S",
+        "x": [
+          0.7,
+          4.5
+        ],
+        "y": [
+          -10.62,
+          -10.5
+        ],
+        "status": "G linha das portas do nicho de serviço"
+      }
+    ],
+    "nota_modelagem": "Paredes aparadas nos encontros (sem sobreposição de volumes) para evitar faces coplanares; vigas e pilares recuados 1 cm dentro das paredes."
+  },
+  "esquadrias": {
+    "portas": [
+      {
+        "id": "PT-01",
+        "ambiente": "Entrada (corredor, fachada leste)",
+        "x": 13.1,
+        "y": [
+          -5.85,
+          -4.85
+        ],
+        "largura": 1.0,
+        "altura": 2.9,
+        "dobradica": "norte",
+        "abre": "para dentro",
+        "status": "C largura 1,00; altura G pela fachada frontal"
+      },
+      {
+        "id": "PT-02",
+        "ambiente": "Suite 2",
+        "y": -5.95,
+        "x": [
+          7.3,
+          8.1
+        ],
+        "largura": 0.8,
+        "altura": 2.1,
+        "dobradica": "leste",
+        "status": "C"
+      },
+      {
+        "id": "PT-03",
+        "ambiente": "Suite 1",
+        "y": -5.95,
+        "x": [
+          10.2,
+          11.0
+        ],
+        "largura": 0.8,
+        "altura": 2.1,
+        "dobradica": "oeste",
+        "status": "C"
+      },
+      {
+        "id": "PT-04",
+        "ambiente": "WC Suite 2",
+        "x": 8.4,
+        "y": [
+          -8.45,
+          -7.75
+        ],
+        "largura": 0.7,
+        "altura": 2.1,
+        "status": "G largura; C altura"
+      },
+      {
+        "id": "PT-05",
+        "ambiente": "WC Suite 1",
+        "x": 9.9,
+        "y": [
+          -11.03,
+          -10.33
+        ],
+        "largura": 0.7,
+        "altura": 2.1,
+        "status": "G largura; C altura"
+      },
+      {
+        "id": "PT-06",
+        "ambiente": "WC social",
+        "y": -4.75,
+        "x": [
+          6.8,
+          7.5
+        ],
+        "largura": 0.7,
+        "altura": 2.1,
+        "status": "G largura; C altura (corte B/B)"
+      },
+      {
+        "id": "PT-07",
+        "ambiente": "Despensa",
+        "y": -1.22,
+        "x": [
+          7.5,
+          8.3
+        ],
+        "largura": 0.8,
+        "altura": 2.1,
+        "status": "G"
+      },
+      {
+        "id": "PT-08",
+        "ambiente": "Área de serviço (2 folhas venezianas)",
+        "y": -10.56,
+        "x": [
+          0.9,
+          2.9
+        ],
+        "largura": 2.0,
+        "altura": 2.1,
+        "status": "C largura 2,00; altura X fachada lateral esquerda"
+      },
+      {
+        "id": "PT-09",
+        "ambiente": "Área de serviço (armário técnico)",
+        "y": -10.56,
+        "x": [
+          3.1,
+          4.3
+        ],
+        "largura": 1.2,
+        "altura": 2.1,
+        "status": "C largura; altura X fachada"
+      }
+    ],
+    "panos_de_vidro": [
+      {
+        "id": "JV-01",
+        "ambiente": "Sala de jantar — norte",
+        "x": [
+          0.65,
+          4.6
+        ],
+        "y": 0.0,
+        "folhas": 3,
+        "z": [
+          0,
+          2.9
+        ],
+        "status": "X (fachada lat. direita: 3 folhas). CONFLITO: cota 3,50"
+      },
+      {
+        "id": "JV-02",
+        "ambiente": "Cozinha — norte",
+        "x": [
+          6.6,
+          8.3
+        ],
+        "y": 0.0,
+        "folhas": 2,
+        "z": [
+          0,
+          2.9
+        ],
+        "status": "C 1,70 + X fachada"
+      },
+      {
+        "id": "JV-03",
+        "ambiente": "Sala de jantar — oeste",
+        "x": 0.0,
+        "y": [
+          -4.65,
+          -0.7
+        ],
+        "folhas": 3,
+        "z": [
+          0,
+          2.9
+        ],
+        "status": "X (alçado posterior). CONFLITO: cota 3,45"
+      },
+      {
+        "id": "JV-04",
+        "ambiente": "Sala de estar — oeste",
+        "x": 0.0,
+        "y": [
+          -9.0,
+          -5.05
+        ],
+        "folhas": 3,
+        "z": [
+          0,
+          2.9
+        ],
+        "status": "X (alçado posterior). CONFLITO: cota 3,65"
+      },
+      {
+        "id": "JV-05",
+        "ambiente": "Sala de estar — sul (fixo)",
+        "x": [
+          0.1,
+          0.7
+        ],
+        "y": -9.9,
+        "folhas": 1,
+        "z": [
+          0,
+          2.9
+        ],
+        "status": "C 0,60"
+      },
+      {
+        "id": "JV-06",
+        "ambiente": "Sala de estar — sul (fixo)",
+        "x": [
+          4.5,
+          5.1
+        ],
+        "y": -9.9,
+        "folhas": 1,
+        "z": [
+          0,
+          2.9
+        ],
+        "status": "C 0,60"
+      },
+      {
+        "id": "JV-07",
+        "ambiente": "Suite 2 — sul",
+        "x": [
+          5.3,
+          8.3
+        ],
+        "y": -11.15,
+        "folhas": 2,
+        "z": [
+          0,
+          2.9
+        ],
+        "status": "C 3,00 + X fachada lat. esquerda + corte B/B"
+      },
+      {
+        "id": "JV-08",
+        "ambiente": "Suite 1 — sul",
+        "x": [
+          10.0,
+          13.0
+        ],
+        "y": -11.15,
+        "folhas": 2,
+        "z": [
+          0,
+          2.9
+        ],
+        "status": "C 3,00 + X"
+      },
+      {
+        "id": "JV-09",
+        "ambiente": "Cozinha/garagem (fixo)",
+        "x": 8.4,
+        "y": [
+          -1.15,
+          -0.1
+        ],
+        "folhas": 1,
+        "z": [
+          0,
+          2.9
+        ],
+        "status": "G planta + X fachada frontal"
+      }
+    ],
+    "nota": "O PDF não traz quadro de esquadrias. Larguras vêm das cotas/planta; alturas dos cortes (2,10 portas; 2,90 vidros) e das fachadas."
+  },
+  "ambientes": [
+    {
+      "nome": "Sala de jantar + cozinha",
+      "x": [
+        0.1,
+        8.3
+      ],
+      "y": [
+        -4.65,
+        -0.1
+      ],
+      "status": "X",
+      "nota": "integrada à sala de estar e ao corredor"
+    },
+    {
+      "nome": "Sala de estar",
+      "x": [
+        0.1,
+        5.1
+      ],
+      "y": [
+        -9.8,
+        -4.85
+      ],
+      "status": "X (5,00 C)"
+    },
+    {
+      "nome": "Corredor",
+      "x": [
+        5.1,
+        13.0
+      ],
+      "y": [
+        -5.85,
+        -4.85
+      ],
+      "status": "C 1,00"
+    },
+    {
+      "nome": "Despensa",
+      "x": [
+        6.55,
+        8.3
+      ],
+      "y": [
+        -2.8,
+        -1.3
+      ],
+      "status": "G"
+    },
+    {
+      "nome": "WC social",
+      "x": [
+        6.55,
+        8.3
+      ],
+      "y": [
+        -4.65,
+        -2.95
+      ],
+      "status": "G (1,70 C)"
+    },
+    {
+      "nome": "Garagem (coberta, aberta a norte e leste)",
+      "x": [
+        8.5,
+        13.2
+      ],
+      "y": [
+        -4.65,
+        0.1
+      ],
+      "status": "C 4,30 / 4,65"
+    },
+    {
+      "nome": "Suite 2",
+      "x": [
+        5.3,
+        8.3
+      ],
+      "y": [
+        -11.05,
+        -6.05
+      ],
+      "status": "C 3,00"
+    },
+    {
+      "nome": "WC Suite 2",
+      "x": [
+        8.5,
+        9.8
+      ],
+      "y": [
+        -8.5,
+        -6.05
+      ],
+      "status": "C 1,30 x 2,45"
+    },
+    {
+      "nome": "WC Suite 1",
+      "x": [
+        8.5,
+        9.8
+      ],
+      "y": [
+        -11.25,
+        -8.65
+      ],
+      "status": "C 1,30 / G"
+    },
+    {
+      "nome": "Suite 1",
+      "x": [
+        10.0,
+        13.0
+      ],
+      "y": [
+        -11.05,
+        -6.05
+      ],
+      "status": "C 3,00"
+    },
+    {
+      "nome": "Área de serviço (nicho externo com portas)",
+      "x": [
+        0.9,
+        4.3
+      ],
+      "y": [
+        -10.6,
+        -10.0
+      ],
+      "status": "C 1,20/0,60/1,20 ; nome pela pág. 26"
+    }
+  ],
+  "terreno": {
+    "lote": {
+      "dim": [
+        30.0,
+        25.0
+      ],
+      "x": [
+        -8.45,
+        21.55
+      ],
+      "y": [
+        -18.0,
+        7.0
+      ],
+      "status": "C 30,00 x 25,00 (folha 02 editada). Posição: casa centrada (G). CONFLITO: pág. 28 indica 25 x 15."
+    },
+    "piscina": {
+      "agua": [
+        2.5,
+        9.5
+      ],
+      "centro": [
+        -5.35,
+        -4.85
+      ],
+      "profundidade": 1.4,
+      "status": "C 2,50 x 9,50 ; posição G (desenho editado em escala diferente da casa) ; profundidade H"
+    },
+    "muro": {
+      "altura": 2.0,
+      "status": "H (contorno do lote desenhado sem altura)"
+    },
+    "portao_e_acesso": {
+      "status": "P — acesso de veículos pelo leste, coerente com a garagem aberta a leste e a pág. 26"
+    }
+  },
+  "conflitos": [
+    "Cadeia superior de cotas (0,60+3,50+2,00+1,70+0,20+4,30+0,40 = 12,70) não fecha com 13,30 entre faces externas medido nos eixos e com a fachada lateral direita; há um '0,60' duplicado na prancha. Adotado vão de vidro da sala de jantar = 3,95 m (fachada).",
+    "Cadeia lateral oeste (0,60 / 3,45 / 0,40 / 3,65 / 0,90) soma 9,00, mas eixos A–E = 9,90 e alçado posterior mede panos de ~3,95 m. Adotada a geometria dos eixos e do alçado.",
+    "Eixo F: cota 5,00 (D–F) vs. medição gráfica 5,20 em três pranchas. Adotado F = -11,15.",
+    "Numeração dos eixos verticais na fundação difere entre topo (1,2,3,4,5,7) e base (1,2,3,6,7).",
+    "Folha 02 editada: lote e piscina desenhados em escala gráfica diferente da casa (≈37 px/m vs 33 px/m).",
+    "Págs. 26–28 (apresentação) trazem alturas incompatíveis com os cortes (ex.: 15,00 m, 9,50 m) e lote 25x15; não usadas como cota.",
+    "A localidade indicada no carimbo difere da mencionada no pedido (contexto de Goiás); a ambientação segue o pedido e nenhum material publicado informa localização.",
+    "Banheiros sem janela nem indicação de ventilação mecânica nas plantas — validar com o engenheiro.",
+    "Altura da porta de entrada (2,90) só inferida pela fachada frontal; cortes não passam por ela."
+  ]
+}
