@@ -424,6 +424,24 @@ def video_set():
 SEEDS = {}
 def main():
     print("Gerando texturas em", OUT)
+    if "--video2" in sys.argv:
+        # pied-de-poule simplificado (almofada) e casca clara de eucalipto
+        n = 512; xx, yy = np.meshgrid(np.arange(n), np.arange(n)); t = 32
+        a = ((xx // t + yy // t) % 2 == 0)
+        d = (((xx % t) + (yy % t)) < t * 0.55) & ~a
+        img = np.where((a | d)[..., None], srgb((24, 24, 24)), srgb((236, 234, 228)))
+        save("pied_col", img)
+        f = stretch_noise(1024, 4, 64, 97, 4)
+        save("casca_clara_col", lerp(np.tile(srgb((206, 204, 196)), (1024, 1024, 1)), np.tile(srgb((166, 162, 152)), (1024, 1024, 1)), f))
+        return
+    if "--moderno" in sys.argv:
+        # porcelanato 120x120 cinza-claro (1 placa = 1024 px em 2,4 m)
+        stone_tiles("porcelain_xl", 37, srgb((216, 214, 209)), srgb((202, 200, 195)), 1024, 1024, srgb((176, 174, 170)), 2, pores=False)
+        # basalto/porcelanato pedra escura 60x120 (fachada)
+        stone_tiles("basalto", 38, srgb((62, 62, 64)), srgb((78, 77, 76)), 512, 1024, srgb((34, 34, 35)), 3)
+        # forro de madeira do beiral (réguas 10 cm)
+        wood_planks("forro_madeira", 19, srgb((150, 108, 70)), srgb((196, 150, 104)), 128, [1200, 1600, 2000], 1.6)
+        return
     if "--pool" in sys.argv:
         pool_tiles("pool_tiles_aqua", 96, base_c=(56, 188, 214), var_c=(28, 160, 200)); return
     if "--hedge" in sys.argv:

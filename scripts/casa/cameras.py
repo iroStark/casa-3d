@@ -23,6 +23,22 @@ CAMS = [
     dict(id="E10", amb="Piscina ao entardecer", loc=(-7.9, 2.6, 1.60), alvo=(1.0, -7.2), lente=24, shift=0.06, modo="tarde"),
     dict(id="E11", amb="Vista aérea ao entardecer", loc=(27.0, 15.5, 13.5), alvo=(6.0, -5.5, 0.0), lente=32, shift=0.0, modo="aereo_tarde"),
     dict(id="E12", amb="Fachada oeste ao entardecer", loc=(-7.6, -15.6, 1.65), alvo=(0.0, -3.0), lente=26, shift=0.08, modo="tarde"),
+    # ---------------- PRANCHAS 3D: ALÇADOS, CORTES E PLANTA (ortográficas, cotas do PDF)
+    dict(id="A01", amb="Alçado frontal — fachada leste", loc=(46.55, -5.2, 1.25), alvo=(6.55, -5.2, 1.25), lente=50, ortho=18.5, modo="elev", vista="leste"),
+    dict(id="A02", amb="Alçado lateral direito — fachada norte", loc=(6.25, 41.0, 1.25), alvo=(6.25, -5.5, 1.25), lente=50, ortho=20.5, modo="elev", vista="norte"),
+    dict(id="A03", amb="Alçado lateral esquerdo — fachada sul", loc=(6.85, -52.0, 1.25), alvo=(6.85, -5.5, 1.25), lente=50, ortho=20.5, modo="elev", vista="sul"),
+    dict(id="A04", amb="Alçado posterior — fachada oeste", loc=(-33.45, -5.8, 1.25), alvo=(6.55, -5.8, 1.25), lente=50, ortho=18.5, modo="elev", vista="oeste"),
+    dict(id="CT1", amb="Corte longitudinal 3D", loc=(6.85, -45.5, 1.25), alvo=(6.85, -5.5, 1.25), lente=50, ortho=20.5, modo="corte", vista="corte_long", clip=42.9),
+    dict(id="CT2", amb="Corte transversal 3D", loc=(46.55, -5.2, 1.25), alvo=(6.55, -5.2, 1.25), lente=50, ortho=18.5, modo="corte", vista="corte_transv", clip=38.85),
+    dict(id="P04", amb="Planta 3D com nomes dos ambientes (sem mobília)", loc=(6.85, -5.0, 30.0), alvo=(6.85, -5.0, 0.0), lente=50, shift=0.0, modo="planta_vazia", ortho=19.5),
+    dict(id="P05", amb="Planta humanizada cotada (lote inteiro)", loc=(6.55, -5.8, 40.0), alvo=(6.55, -5.8, 0.0), lente=50, shift=0.0, modo="planta_cotada", ortho=33.0),
+    # ---------------- ENQUADRAMENTOS DAS IMAGENS DO VÍDEO
+    dict(id="V02", amb="Salas abertas para a piscina (frontal)", loc=(-7.2, -4.75, 1.25), alvo=(3.0, -4.75), lente=22, shift=0.06, modo="dia"),
+    dict(id="V03", amb="Piscina e salas (oblíqua)", loc=(-6.6, -11.2, 1.45), alvo=(1.2, -4.2), lente=24, shift=0.06, modo="dia"),
+    dict(id="V04", amb="Canto do nicho de serviço", loc=(-1.3, -13.0, 1.45), alvo=(1.8, -10.2), lente=24, shift=0.04, modo="dia"),
+    dict(id="V05", amb="Fachada de entrada (frontal)", loc=(21.0, -6.9, 1.35), alvo=(13.0, -6.9), lente=22, shift=0.08, modo="dia"),
+    dict(id="V06", amb="Entrada e garagem", loc=(21.2, -12.0, 1.6), alvo=(12.4, -4.6), lente=26, shift=0.06, modo="dia"),
+    dict(id="V07", amb="Sala de estar com a piscina ao fundo", loc=(3.9, -9.05, 1.35), alvo=(0.2, -4.2), lente=20, shift=0.04, modo="dia"),
     # ---------------- VISTA DO VÍDEO DE REFERÊNCIA (mesmo enquadramento da abertura do vídeo)
     dict(id="V01", amb="Jantar, sala e piscina (vista do vídeo)", loc=(3.20, -1.05, 1.35), alvo=(0.0, -7.6), lente=20, shift=0.02, modo="dia"),
     # ---------------- SALA DE ESTAR
@@ -91,7 +107,10 @@ def make_camera(c, C):
     tgt = Vector((c["alvo"][0], c["alvo"][1], c["alvo"][2] if len(c["alvo"]) > 2 else c["loc"][2]))
     ob.location = loc
     d = tgt - loc
-    if c.get("ortho") or c["modo"] == "topo":
+    if c["modo"] in ("elev", "corte"):
+        yaw = math.atan2(d.y, d.x) - math.pi / 2
+        ob.rotation_euler = (math.radians(90), 0, yaw)
+    elif c.get("ortho") or c["modo"] == "topo":
         ob.rotation_euler = (0, 0, 0)
     elif c.get("pitch") or c["modo"] in ("aereo", "aereo_tarde", "planta_persp"):
         ob.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()

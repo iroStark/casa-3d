@@ -393,6 +393,12 @@ const sel = $("#selAmbiente");
 sel.innerHTML = `<option value="">Ir para…</option>` + AMBIENTES_EXPLORAR.map((a) => `<option value="${a.id}">${a.nome}</option>`).join("");
 sel.addEventListener("change", () => { if (sel.value) irPara(sel.value); sel.value = ""; });
 
+$("#btnVerModerna").addEventListener("click", () => {
+  const b = [...document.querySelectorAll("#filtrosGaleria button")].find((x) => x.textContent === "Alçados e cortes");
+  if (b) b.click();
+  document.getElementById("ambientes").scrollIntoView({ behavior: reduzMovimento ? "auto" : "smooth" });
+});
+
 /* ------------------------------------------------------------------ início */
 // imagem renderizada enquanto o modelo 3D carrega (e como alternativa se falhar)
 { const p = $("#palcoFallback"); p.src = `${BASE}renders/web/E06.jpg`; p.hidden = false; }

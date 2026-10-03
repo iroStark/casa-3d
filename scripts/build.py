@@ -19,6 +19,8 @@ OUT = arg("--out", os.path.join(ROOT, "blender", "casa.blend"))
 SEED = 20260612  # data da prancha — semente global para tudo que é aleatório
 random.seed(SEED)
 
+import casa.estilo as estilo
+estilo.ESTILO["nome"] = arg("--estilo", "video")
 import casa.core as core
 import casa.mats as mats
 import casa.arch as arch
@@ -33,6 +35,7 @@ sc.name = "Casa"
 sc.unit_settings.system = "METRIC"
 sc.unit_settings.scale_length = 1.0
 sc["semente"] = SEED
+sc["estilo"] = estilo.ESTILO["nome"]
 sc["fonte"] = "source/projeto.pdf — ver data/projeto.json"
 
 L = mats.lib()
@@ -54,6 +57,8 @@ if STAGE in ("full", "interior"):
     import casa.render_setup as rs; importlib.reload(rs)
     rs.setup(sc)
 
+import casa.pranchas as pranchas; importlib.reload(pranchas)
+pranchas.build()
 import casa.refs as refs; importlib.reload(refs)
 refs.build()
 

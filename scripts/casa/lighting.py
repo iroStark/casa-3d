@@ -156,8 +156,8 @@ def build(L):
     for k, y in enumerate((-2.0, -4.85, -7.7)):
         spot(f"L_piscina_{k}", (-4.13, y, -0.55), 120, 120, color=(0.9, 0.95, 1.0), C=CX, radius=0.05, target=(-6.6, y, -1.2))
     # balizadores no jardim
-    for k, (x, y) in enumerate([(-2.4, -3.2), (-2.4, -6.4), (15.0, -6.0), (15.0, -8.5), (17.0, 2.5), (-5.8, -13.0)]):
-        cylinder(f"Balizador_{k}", 0.05, 0.5, (x, y, -0.08), 16, M["alu_preto"])
+    for k, (x, y) in enumerate([(-7.2, 1.2), (-7.2, -10.9), (15.0, -7.95), (14.95, -10.4), (17.0, 2.5), (-5.8, -13.0)]):
+        cylinder(f"Balizador_{k}", 0.05, 0.62, (x, y, -0.22), 16, M["alu_preto"])
         d = cylinder(f"Balizador_{k}_luz", 0.045, 0.03, (x, y, 0.38), 16, M["led"]); d["luz"] = 1
         point(f"L_balizador_{k}", (x, y, 0.45), 4, C=CX, radius=0.03)
     # árvores com uplight

@@ -172,7 +172,7 @@ def lib():
     L["piso_garagem"] = pbr("Piso de concreto polido (garagem)", (0.58, 0.57, 0.55), 0.45, tex="concrete_garage_col", tex_m=3.0, rough_tex="concrete_garage_rgh")
     L["calcada"] = pbr("Concreto desempenado (acesso)", (0.68, 0.66, 0.62), 0.8, tex="concrete_drive_col", tex_m=3.0, rough_tex="concrete_drive_rgh")
     L["borda_piscina"] = pbr("Borda de pedra (piscina)", (0.88, 0.84, 0.78), 0.7, tex="coping_col", tex_m=2.0, rough_tex="coping_rgh", normal="coping_nrm", nstrength=0.4)
-    L["deck"] = pbr("Deck de madeira clara", (0.62, 0.5, 0.38), 0.6, tex="deck_gray_col", tex_m=2.24, rough_tex="deck_gray_rgh", normal="deck_gray_nrm", nstrength=0.6, categoria=P)
+    L["deck"] = pbr("Deck de madeira clara", (0.72, 0.62, 0.55), 0.6, tex="deck_gray_col", tex_m=2.24, tint=(1.18, 1.1, 1.08), rough_tex="deck_gray_rgh", normal="deck_gray_nrm", nstrength=0.6, categoria=P)
     L["pastilha"] = pbr("Pastilha de vidro (piscina)", (0.42, 0.68, 0.7), 0.2, tex="pool_tiles_aqua_col", tex_m=0.8, coat=0.4)
     L["agua"] = shadow_transparent(pbr("Água", (0.6, 0.93, 0.98), 0.02, transmission=1.0, ior=1.333, categoria="paisagismo"))
     L["grama"] = pbr("Gramado (esmeralda)", (0.25, 0.4, 0.15), 0.95, tex="grass_col", tex_m=2.0, tint=(0.72, 0.74, 0.62), categoria="paisagismo")
@@ -244,5 +244,40 @@ def lib():
     L["concreto_claro"] = pbr("Piso cimentício claro", (0.82, 0.8, 0.77), 0.7, tex="concrete_light_col", tex_m=3.0, rough_tex="concrete_light_rgh", categoria=P)
     L["art_mar1"] = pbr("Quadro mar 1", (0.3, 0.5, 0.7), 0.6, tex="art_mar1_col", tex_m=1.0, categoria=P)
     L["art_mar2"] = pbr("Quadro mar 2", (0.3, 0.5, 0.7), 0.6, tex="art_mar2_col", tex_m=1.0, categoria=P)
-    L["veneziana"] = pbr("Veneziana laqueada areia", (0.78, 0.74, 0.66), 0.5, categoria=A)
+    # ---- detalhes das imagens do vídeo de apresentação (proposta)
+    L["painel_taupe"] = pbr("Painel de fachada taupe (juntas verticais)", (0.43, 0.39, 0.36), 0.42, tex="plaster_gray_col", tex_m=3.0, tint=(0.36, 0.325, 0.3), coat=0.15, categoria=P)
+    L["taupe_escuro"] = pbr("Metal bronze-taupe (testeira, coluna, puxador)", (0.27, 0.24, 0.22), 0.38, 0.6, categoria=P)
+    L["junta_escura"] = pbr("Junta de painel", (0.08, 0.075, 0.07), 0.7, categoria=P)
+    L["forro_beiral"] = pbr("Forro do beiral — cinza-claro liso", (0.8, 0.79, 0.77), 0.85, categoria=P)
+    L["laca_terracota"] = pbr("Laca terracota fosca (marcenaria da cozinha)", (0.55, 0.3, 0.2), 0.55, categoria=P)
+    L["grafite_fosco"] = pbr("Cinza grafite fosco (nicho de serviço)", (0.17, 0.17, 0.18), 0.6, categoria=P)
+    L["tecido_pied"] = pbr("Tecido pied-de-poule", (0.5, 0.5, 0.5), 0.9, tex="pied_col", tex_m=0.12, sheen=0.3, categoria=P)
+    L["tecido_salvia"] = pbr("Tecido sálvia", (0.5, 0.58, 0.48), 0.85, tex="fabric_teal_col", tex_m=0.4, tint=(1.1, 1.05, 0.95), sheen=0.4, categoria=P)
+    L["tecido_teal_escuro"] = pbr("Tecido verde-petróleo", (0.15, 0.28, 0.28), 0.8, tex="fabric_teal_col", tex_m=0.4, tint=(0.55, 0.62, 0.65), sheen=0.6, categoria=P)
+    L["poster_life"] = pbr("Pôster 'Life'", (0.1, 0.2, 0.15), 0.5, tex="poster_life_col", tex_m=1.0, coat=0.6, categoria=P)
+    L["casca_clara"] = pbr("Casca clara (eucalipto)", (0.78, 0.77, 0.73), 0.8, tex="casca_clara_col", tex_m=1.0, categoria="paisagismo")
+    L["capim"] = pbr("Capim ornamental", (0.36, 0.55, 0.18), 0.6, subsurface=0.0, categoria="paisagismo")
+    L["veneziana"] = pbr("Veneziana de alumínio grafite", (0.16, 0.16, 0.17), 0.45, 0.5, categoria=A)
+    from .estilo import ESTILO
+    if ESTILO["nome"] == "moderno":
+        moderno(L)
     return L
+
+def moderno(L):
+    """Paleta contemporânea (PROPOSTA). Troca materiais por chave — todas as peças que usam
+    a chave mudam juntas, mantendo continuidade entre ambientes."""
+    P = "proposta"
+    L["parede_int"] = pbr("Pintura acetinada — branco neve", (0.9, 0.895, 0.88), 0.8, tex="plaster_gray_col", tex_m=2.0, tint=(1.08, 1.08, 1.07), normal="plaster_gray_nrm", nstrength=0.08)
+    L["parede_ext"] = pbr("Reboco liso — branco", (0.9, 0.89, 0.87), 0.85, tex="plaster_gray_col", tex_m=2.0, tint=(1.09, 1.09, 1.08), normal="plaster_gray_nrm", nstrength=0.2, categoria="arquitetura")
+    L["piso_madeira"] = pbr("Porcelanato 120x120 cinza-claro acetinado", (0.84, 0.83, 0.81), 0.28, tex="porcelain_xl_col", tex_m=2.4, rough_tex="porcelain_xl_rgh", normal="porcelain_xl_nrm", nstrength=0.15, coat=0.15)
+    L["tecido_cinza"] = L["boucle"]
+    L["tecido_azul"] = L["couro"]
+    L["tecido_teal"] = L["veludo_oliva"]
+    L["palha"] = pbr("Metal preto fosco (pendentes e vasos)", (0.025, 0.025, 0.027), 0.42, 0.6, categoria=P)
+    L["carvalho_claro"] = L["nogueira"]
+    L["calacatta"] = pbr("Quartzo branco calacatta", (0.93, 0.92, 0.9), 0.12, tex="calacatta_col", tex_m=1.6, rough_tex="calacatta_rgh", coat=0.3)
+    L["latao"] = pbr("Metal preto fosco", (0.02, 0.02, 0.022), 0.45, 0.8)
+    L["azulejo_marinho"] = L["pedra_verde"]
+    L["tecido_salmao"] = L["ceramica_terracota"]
+    L["pedra_fachada"] = pbr("Porcelanato pedra escura 60x120 (fachada)", (0.25, 0.25, 0.25), 0.55, tex="basalto_col", tex_m=2.4, rough_tex="basalto_rgh", normal="basalto_nrm", nstrength=0.5, categoria=P)
+    L["forro_madeira"] = pbr("Forro de madeira do beiral (réguas 10 cm)", (0.6, 0.43, 0.28), 0.5, tex="forro_madeira_col", tex_m=1.6, rough_tex="forro_madeira_rgh", normal="forro_madeira_nrm", nstrength=0.3, categoria=P)

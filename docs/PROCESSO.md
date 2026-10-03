@@ -56,3 +56,13 @@ Ver `data/projeto.json → conflitos`. Principais: cadeias de cotas norte e oest
 - Mudou apenas a **ambientação** (proposta): piso porcelanato amadeirado claro, paredes cinza-claro, caixilhos pretos, forro liso com perfil linear de LED preto, cadeiras azul-petróleo, mesa clara com base preta, dois pendentes de palha, sofá cinza em L, painel liso de madeira na TV, ilha em pedra cinza, suíte 1 com armário grafite, cabeceira estofada grafite com LED e quadros de mar, suíte 2 com parede de réguas de madeira e almofadas salmão, WC social azul-marinho, banheiro da suíte 1 em marmorizado preto, muro coberto de trepadeira, dracenas, poltronas verde-água no terraço, deck claro e piscina turquesa, piso ligando o terraço à piscina (como na pág. 26).
 - A arquitetura (paredes, vãos, alturas, laje, posição da piscina) continua a do PDF. Nova câmera V01 reproduz o enquadramento de abertura do vídeo.
 - Correção encontrada nesta revisão: o plano de gramado do entorno passava acima do fundo da piscina; foi recortado fora do lote.
+
+## 10. Versão 2 — linguagem das imagens do vídeo de apresentação (03/10/2026)
+- Referência: 10 quadros do vídeo enviados pelo proprietário (fachada de entrada, garagem, piscina, nicho de serviço, corredor, sala e a planta humanizada cotada). A planta do vídeo tem as mesmas medidas do projeto (15,35; 3,00; 1,30; 1,00; 5,00; piscina 2,50 × 9,50).
+- Fachada leste em painéis taupe com juntas verticais (2 cm sobre a face), porta pivotante lisa com puxador preto e fechadura digital, testeira bronze, forro do beiral claro, coluna escura na garagem, venezianas grafite no nicho de serviço.
+- Entorno: plataforma de concreto 17 cm acima do gramado (hipótese de nível), placas-degrau flutuantes com balizadores, touceiras de capim, árvore de tronco claro, portão de pedestres em frente à entrada.
+- Interiores: sofá modular cinza com almofadas pied-de-poule/couro/sálvia, mesa de centro orgânica em nogueira, poltrona verde-petróleo, pôster "Life", marcenaria terracota com geladeira inox, ilha em pedra, trilhos pretos com spots e pendentes, batentes de madeira.
+- Novas câmeras V02–V07 reproduzem os enquadramentos das imagens; P05 é a planta humanizada cotada; pranchas A01–A04 (alçados), CT1–CT2 (cortes) e P04 (planta com nomes) com cotas documentadas.
+- Imagens fixas com a porta de entrada fechada; no vídeo do percurso ela fica aberta (a câmera passa por ela).
+- Corrigidos nesta versão: bica da torneira da ilha e vidro da máquina de lavar estavam abaixo do piso (posição aplicada em dobro).
+- PDF profissional: `exports/apresentacao_casa.pdf` (23 pranchas A3), gerado por `scripts/pdf_apresentacao.sh`.

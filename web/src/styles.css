@@ -221,3 +221,7 @@ main { position: relative; z-index: 10; }
   .cartao p:not(.medida) + p:not(.medida) { display: none; }
   .cartao .medida { font-size: .78rem; }
 }
+
+.moderna-grade { display: grid; grid-template-columns: 1fr 1.25fr; gap: 36px; align-items: center; }
+.moderna-grade img { border-radius: 14px; box-shadow: var(--sombra); width: 100%; height: auto; }
+@media (max-width: 900px) { .moderna-grade { grid-template-columns: 1fr; } }

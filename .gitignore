@@ -20,3 +20,4 @@ textures/
 exports/*.blend
 *.blend1
 exports/*.mp4
+exports/*.pdf

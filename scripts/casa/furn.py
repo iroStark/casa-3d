@@ -124,7 +124,7 @@ def tapete(name, w, d, M, mat, loc, rot=0):
     o = [box(name, -w / 2, w / 2, -d / 2, d / 2, 0.001, 0.014, mat, bevel=0.006, seg=2)]
     return place(name, o, loc, rot)
 
-def rack_tv(name, M, loc, rot=0, w=3.2, ripado=True):
+def rack_tv(name, M, loc, rot=0, w=3.2, ripado=True, mat=None):
     """Painel ripado de carvalho + rack suspenso + TV 65"."""
     o = []
     # painel ripado (ripas 4 cm, junta 1,5 cm) até a sanca
@@ -135,10 +135,11 @@ def rack_tv(name, M, loc, rot=0, w=3.2, ripado=True):
             o.append(box(f"{name}_ripa{i}", x, x + 0.04, 0.0, 0.025, 0.0, 2.93, M["carvalho"]))
         o.append(box(name + "_fundo_ripado", -w / 2, w / 2, 0.025, 0.035, 0.0, 2.93, M["nogueira"]))
     # rack suspenso
-    o.append(rb(name + "_rack", -1.20, 1.20, -0.45, 0.0, 0.25, 0.60, M["nogueira"], 0.008))
+    RM = mat or M["nogueira"]
+    o.append(rb(name + "_rack", -1.20, 1.20, -0.45, 0.0, 0.25, 0.60, RM, 0.008))
     for i in range(4):
         x = -1.20 + 0.6 * i
-        o.append(box(f"{name}_frente{i}", x + 0.005, x + 0.595, -0.456, -0.45, 0.26, 0.59, M["nogueira"]))
+        o.append(box(f"{name}_frente{i}", x + 0.005, x + 0.595, -0.456, -0.45, 0.26, 0.59, RM))
     o.append(box(name + "_tampo_pedra", -1.21, 1.21, -0.46, 0.0, 0.60, 0.62, M["travertino"], bevel=0.003))
     # TV 65"
     o.append(box(name + "_tv", -0.72, 0.72, -0.06, -0.03, 1.05, 1.88, M["alu_preto"], bevel=0.004))
@@ -355,13 +356,14 @@ def pendente_globos(name, M, loc, n=7, span=1.6, ceiling=3.05):
         o.append(b)
     return place(name, o, loc, cat="iluminacao")
 
-def ilha(name, M, x0, x1, y0, y1):
+def ilha(name, M, x0, x1, y0, y1, corpo=None):
     """Ilha da cozinha (pág. 2: 1,10 x 3,35; pág. 3: cooktop ao norte, cuba ao sul;
     corte A/A: bancada 0,90 e balcão elevado 1,10 do lado da sala)."""
     o = []
     H = 0.90; top = 0.03
     # caixa de marcenaria
-    o.append(box(name + "_corpo", x0 + 0.05, x1, y0, y1, 0.10, H - top, M["carvalho"]))
+    CM = corpo or M["carvalho"]
+    o.append(box(name + "_corpo", x0 + 0.05, x1, y0, y1, 0.10, H - top, CM))
     o.append(box(name + "_rodape", x0 + 0.10, x1 - 0.05, y0 + 0.05, y1 - 0.05, 0.0, 0.10, M["nogueira"]))
     # frentes de gaveta/porta no lado leste (área de trabalho) com puxadores de latão
     n = int((y1 - y0) / 0.60)
@@ -369,7 +371,7 @@ def ilha(name, M, x0, x1, y0, y1):
         ya = y0 + 0.02 + i * (y1 - y0 - 0.04) / n
         yb = ya + (y1 - y0 - 0.04) / n - 0.004
         for k, (za, zb) in enumerate(((0.12, 0.38), (0.39, 0.62), (0.63, 0.84))):
-            o.append(box(f"{name}_frente{i}_{k}", x1, x1 + 0.006, ya, yb, za, zb, M["carvalho"]))
+            o.append(box(f"{name}_frente{i}_{k}", x1, x1 + 0.006, ya, yb, za, zb, CM))
             o.append(box(f"{name}_pux{i}_{k}", x1 + 0.006, x1 + 0.02, (ya + yb) / 2 - 0.08, (ya + yb) / 2 + 0.08, zb - 0.05, zb - 0.04, M["latao"]))
     # tampo de quartzo com recorte para cuba (cuba ao sul) e cooktop (ao norte)
     sx0, sx1 = x0 + 0.30, x0 + 0.80   # cuba 0,50 x 0,40
@@ -390,7 +392,7 @@ def ilha(name, M, x0, x1, y0, y1):
     fx = sx1 + 0.08; fy = (sy0 + sy1) / 2
     o.append(cylinder(name + "_torneira_base", 0.025, 0.05, (fx, fy, H), 24, M["latao"]))
     o.append(cylinder(name + "_torneira_corpo", 0.014, 0.30, (fx, fy, H + 0.05), 16, M["latao"]))
-    arc = torus(name + "_torneira_bica", 0.12, 0.012, (fx - 0.12, fy, H + 0.35), 24, 8, M["latao"], arc=math.pi)
+    arc = torus(name + "_torneira_bica", 0.12, 0.012, (0, 0, 0), 24, 8, M["latao"], arc=math.pi)
     arc.rotation_euler = (math.pi / 2, 0, 0); arc.location = (fx - 0.12, fy, H + 0.35)
     o.append(arc)
     o.append(box(name + "_torneira_alav", fx - 0.005, fx + 0.07, fy - 0.006, fy + 0.006, H + 0.24, H + 0.25, M["latao"]))
@@ -401,7 +403,7 @@ def ilha(name, M, x0, x1, y0, y1):
         o.append(torus(f"{name}_zona{k}", rr_, 0.002, (cx, cyy, H + 0.0065), 32, 4, M["inox"]))
     # balcão elevado (1,10) do lado oeste com sobra para os joelhos
     o.append(box(name + "_balcao", x0 - 0.30, x0 + 0.12, y0 + 0.20, y1 - 0.20, 1.07, 1.10, T))
-    o.append(box(name + "_balcao_frente", x0 - 0.02, x0 + 0.05, y0, y1, 0.10, 1.07, M["carvalho"]))
+    o.append(box(name + "_balcao_frente", x0 - 0.02, x0 + 0.05, y0, y1, 0.10, 1.07, CM))
     # objetos: tábua, fruteira, ervas
     o.append(box(name + "_tabua", x1 - 0.42, x1 - 0.12, y0 + 1.25, y0 + 1.70, H, H + 0.02, M["carvalho"], bevel=0.005))
     o.append(cylinder(name + "_pote", 0.06, 0.15, (x1 - 0.2, y0 + 1.85, H), 24, M["ceramica_off"]))
@@ -430,39 +432,41 @@ def coifa(name, M, x, y, zb=1.70, ceiling=3.05):
         o.append(L)
     return o
 
-def torre_nicho(name, M, x0, x1, y0, y1, h=2.90):
+def torre_nicho(name, M, x0, x1, y0, y1, h=2.90, mat=None, geladeira=None):
     """Marcenaria do nicho 0,60 (pág. 3: armário alto + geladeira ao sul)."""
+    MAT = mat or M["carvalho"]
     o = []
-    o.append(box(name + "_caixa", x0, x1, y0, y1, 0.0, h, M["carvalho"]))
+    o.append(box(name + "_caixa", x0, x1, y0, y1, 0.0, h, MAT))
     fx = x1  # frentes voltadas para leste? Não: o nicho abre para oeste (x0)
     n = 5
     w = (y1 - y0) / n
     for i in range(n):
         ya, yb = y0 + i * w + 0.003, y0 + (i + 1) * w - 0.003
         if i == 0:   # geladeira integrada (porta inteira)
-            o.append(box(f"{name}_geladeira", x0 - 0.02, x0, ya, yb, 0.10, h - 0.003, M["carvalho"]))
+            o.append(box(f"{name}_geladeira", x0 - 0.02, x0, ya, yb, 0.10, h - 0.003, geladeira or MAT))
             o.append(box(f"{name}_gel_pux", x0 - 0.05, x0 - 0.02, yb - 0.06, yb - 0.04, 0.9, 1.8, M["latao"]))
         elif i == 2:  # torre quente: forno + micro-ondas em vidro preto
             o.append(box(f"{name}_forno", x0 - 0.02, x0, ya, yb, 0.85, 1.45, M["vidro_preto"]))
             o.append(box(f"{name}_micro", x0 - 0.02, x0, ya, yb, 1.48, 1.86, M["vidro_preto"]))
             o.append(box(f"{name}_forno_pux", x0 - 0.04, x0 - 0.02, ya + 0.05, yb - 0.05, 1.38, 1.40, M["inox"]))
-            o.append(box(f"{name}_inf", x0 - 0.02, x0, ya, yb, 0.10, 0.82, M["carvalho"]))
-            o.append(box(f"{name}_sup", x0 - 0.02, x0, ya, yb, 1.89, h - 0.003, M["carvalho"]))
+            o.append(box(f"{name}_inf", x0 - 0.02, x0, ya, yb, 0.10, 0.82, MAT))
+            o.append(box(f"{name}_sup", x0 - 0.02, x0, ya, yb, 1.89, h - 0.003, MAT))
         else:
-            o.append(box(f"{name}_porta{i}_inf", x0 - 0.02, x0, ya, yb, 0.10, 2.10, M["carvalho"]))
-            o.append(box(f"{name}_porta{i}_sup", x0 - 0.02, x0, ya, yb, 2.113, h - 0.003, M["carvalho"]))
+            o.append(box(f"{name}_porta{i}_inf", x0 - 0.02, x0, ya, yb, 0.10, 2.10, MAT))
+            o.append(box(f"{name}_porta{i}_sup", x0 - 0.02, x0, ya, yb, 2.113, h - 0.003, MAT))
             o.append(box(f"{name}_pux{i}", x0 - 0.045, x0 - 0.02, yb - 0.05, yb - 0.035, 0.95, 1.55, M["latao"]))
     o.append(box(name + "_rodape", x0 - 0.02, x0 + 0.05, y0, y1, 0, 0.10, M["nogueira"]))
     return o
 
-def cristaleira(name, M, loc, rot=0, w=1.8, d=0.40):
+def cristaleira(name, M, loc, rot=0, w=1.8, d=0.40, mat=None):
     """Aparador-cristaleira (base fechada + nichos abertos) na parede norte da cozinha."""
-    o = [rb(name + "_base", -w / 2, w / 2, -d / 2, d / 2, 0.10, 0.88, M["carvalho"], 0.004),
+    MAT = mat or M["carvalho"]
+    o = [rb(name + "_base", -w / 2, w / 2, -d / 2, d / 2, 0.10, 0.88, MAT, 0.004),
          box(name + "_tampo", -w / 2 - 0.01, w / 2 + 0.01, -d / 2 - 0.02, d / 2, 0.88, 0.91, M["calacatta"], bevel=0.002),
          box(name + "_rodape", -w / 2 + 0.03, w / 2 - 0.03, -d / 2 + 0.03, d / 2, 0.0, 0.10, M["nogueira"])]
     for i in range(3):
         x = -w / 2 + w * i / 3
-        o.append(box(f"{name}_porta{i}", x + 0.004, x + w / 3 - 0.004, -d / 2 - 0.006, -d / 2, 0.12, 0.86, M["carvalho"]))
+        o.append(box(f"{name}_porta{i}", x + 0.004, x + w / 3 - 0.004, -d / 2 - 0.006, -d / 2, 0.12, 0.86, MAT))
         o.append(box(f"{name}_pux{i}", x + w / 6 - 0.06, x + w / 6 + 0.06, -d / 2 - 0.02, -d / 2 - 0.006, 0.80, 0.81, M["latao"]))
     # nichos abertos superiores (prateleiras com louças)
     for k, z in enumerate((1.45, 1.85, 2.25)):
@@ -802,7 +806,7 @@ def sofa_L(name, M, loc, rot=0, L=3.0, chaise=1.7, D=0.95, mat=None):
         c = cushion(f"{name}_costas{i}", (L - 0.22) / n - 0.05, 0.20, 0.42, mat, (x0 + (L - 0.22) / n / 2, D / 2 - 0.3, 0.68))
         c.rotation_euler = (math.radians(-10), 0, 0); o.append(c)
     o.append(cushion(name + "_assento_chaise", D - 0.06, chaise - 0.1, 0.14, mat, (-L / 2 + D / 2, -D / 2 - (chaise - D) / 2 + 0.02, 0.48)))
-    for k, (x, m) in enumerate(((-0.6, M["linho_branco"]), (-0.15, M["tecido_teal"]), (0.55, M["linho_branco"]), (0.95, M["tecido_salmao"]))):
+    for k, (x, m) in enumerate(((-0.85, M["tecido_pied"]), (-0.35, M["couro"]), (0.45, M["tecido_salvia"]), (0.85, M["linho"]), (1.1, M["couro"]))):
         c = cushion(f"{name}_almofada{k}", 0.45, 0.14, 0.42, m, (x, D / 2 - 0.42, 0.78))
         c.rotation_euler = (math.radians(-15), 0, math.radians(6 * (k - 1.5))); o.append(c)
     for x in (-L / 2 + 0.06, L / 2 - 0.06):
@@ -924,3 +928,73 @@ def dracena(name, M, loc, h=3.2, troncos=4, seed=1):
         top = d * H
         o += palm_fronds(f"{name}_roseta{t}", M, (top.x, top.y, top.z - 0.1), n=14, length=0.75, seed=seed * 13 + t, rise=0.9)
     return place(name, o, loc, nota="Vegetação: proposta (vídeo)")
+
+
+def touceira(name, M, loc, r=0.45, h=0.55, laminas=None, seed=1):
+    """Touceira de capim ornamental: lâminas finas arqueadas saindo do centro."""
+    rr = random.Random(seed)
+    n = laminas or int(260 * r / 0.45)
+    vs, fs = [], []
+    for i in range(n):
+        a = rr.random() * 2 * math.pi
+        el = math.radians(rr.uniform(35, 85))
+        L = h * rr.uniform(0.7, 1.25) / max(math.sin(el), 0.5)
+        dirh = Vector((math.cos(a), math.sin(a), 0))
+        side = Vector((-math.sin(a), math.cos(a), 0)) * 0.006
+        base = dirh * rr.uniform(0, r * 0.25)
+        pts = []
+        for k in range(5):
+            t = k / 4
+            p = base + dirh * (math.cos(el) * L * t + t * t * L * 0.35) + Vector((0, 0, math.sin(el) * L * t - t * t * L * 0.45))
+            pts.append(p)
+        k0 = len(vs)
+        for k, p in enumerate(pts):
+            w = 1.0 - 0.85 * k / 4
+            vs += [p - side * w, p + side * w]
+        for k in range(4):
+            q = k0 + 2 * k
+            fs.append((q, q + 1, q + 3, q + 2))
+    ob = mesh_obj(name + "_laminas", vs, fs, M["capim"])
+    for p in ob.data.polygons:
+        p.use_smooth = True
+    return place(name, [ob], loc, cat="paisagismo", nota="Capim ornamental: proposta (vídeo)")
+
+
+def mesa_centro_organica(name, M, loc, rot=0, L=1.25, W=0.85):
+    """Mesa de centro orgânica (seixo) em nogueira, pés pretos (vídeo)."""
+    pts = []
+    for i in range(48):
+        a = 2 * math.pi * i / 48
+        r = 1.0 + 0.12 * math.cos(3 * a + 0.4) + 0.05 * math.cos(2 * a)
+        pts.append((math.cos(a) * L / 2 * r, math.sin(a) * W / 2 * r))
+    top = extrude_profile(name + "_tampo", pts, 0.34, 0.38, M["nogueira"])
+    add_bevel(top, 0.01, 2, 60)
+    o = [top]
+    for k, a in enumerate((0.3, 2.4, 4.4)):
+        o.append(cylinder(f"{name}_pe{k}", 0.018, 0.34, (math.cos(a) * L * 0.3, math.sin(a) * W * 0.3, 0), 12, M["ferro"]))
+    o.append(box(name + "_livro", -0.25, 0.05, -0.12, 0.10, 0.38, 0.41, M["livro_b"], bevel=0.003))
+    o.append(cylinder(name + "_escultura", 0.035, 0.22, (0.08, -0.05, 0.41), 16, M["vidro_globo"]))
+    o.append(sphere(name + "_musgo", 0.06, (0.25, 0.12, 0.44), 16, 8, M["folha_arbusto"] if "folha_arbusto" in M else M["veludo_oliva"]))
+    return place(name, o, loc, rot)
+
+def trilho(name, M, x0, y0, x1, y1, z=3.04, spots=4, pendentes=None):
+    """Trilho eletrificado preto com spots (e pendentes cilíndricos opcionais)."""
+    v = Vector((x1 - x0, y1 - y0, 0)); L = v.length; d = v / L
+    nrm = Vector((-d.y, d.x, 0)) * 0.018
+    a, b = Vector((x0, y0, z)), Vector((x1, y1, z))
+    vs = [a - nrm, b - nrm, b + nrm, a + nrm]; vs += [p + Vector((0, 0, 0.035)) for p in vs]
+    f = [(0, 1, 2, 3), (4, 7, 6, 5), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)]
+    o = [mesh_obj(name + "_trilho", [tuple(p) for p in vs], f, M["alu_preto"])]
+    for k in range(spots):
+        p = a + d * L * (k + 0.5) / spots
+        o.append(cylinder(f"{name}_haste{k}", 0.008, 0.06, (p.x, p.y, z - 0.06), 8, M["alu_preto"]))
+        c = cylinder(f"{name}_spot{k}", 0.03, 0.12, (p.x, p.y, z - 0.18), 16, M["alu_preto"])
+        o.append(c)
+        lz = cylinder(f"{name}_spot{k}_luz", 0.024, 0.003, (p.x, p.y, z - 0.183), 16, M["led_forte"]); lz["luz"] = 1
+        o.append(lz)
+    for k, (px, py, zb) in enumerate(pendentes or []):
+        o.append(cylinder(f"{name}_cabo{k}", 0.003, z - zb - 0.18, (px, py, zb + 0.18), 6, M["alu_preto"]))
+        o.append(cylinder(f"{name}_pendente{k}", 0.04, 0.18, (px, py, zb), 20, M["alu_preto"]))
+        lz = cylinder(f"{name}_pendente{k}_luz", 0.034, 0.003, (px, py, zb - 0.003), 16, M["led_forte"]); lz["luz"] = 1
+        o.append(lz)
+    return o

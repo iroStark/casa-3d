@@ -125,7 +125,7 @@ def validate(min_clear=0.18):
     end = WAYPOINTS[-1][0]
     t = 0.0; dt = 1.0 / FPS
     prev, _ = sample(0)
-    hidden_names = ("REF_", "CAM_", "ALVO", "L_")
+    hidden_names = ("REF_", "CAM_", "ALVO", "L_", "Cota_", "Rotulo_", "Norte_", "Captador_")
     while t <= end:
         p, _ = sample(t)
         d = p - prev

@@ -85,13 +85,87 @@ def cutaway(on):
                 ob.hide_render, sc_ = _saved[key]
                 ob.scale = sc_
 
+_hid = {}
+def esconder(objs):
+    for o in objs:
+        if o.name not in _hid:
+            _hid[o.name] = o.hide_render
+        o.hide_render = True
+
+def restaurar():
+    for n, v in _hid.items():
+        o = bpy.data.objects.get(n)
+        if o:
+            o.hide_render = v
+    _hid.clear()
+    for cn in ("15_Cotas_Alcados", "15_Cotas_Cortes", "15_Rotulos_Planta", "15_Cotas_Planta"):
+        c = bpy.data.collections.get(cn)
+        if c:
+            c.hide_render = True
+    cs = bpy.data.objects.get("Captador_sombra_pranchas")
+    if cs:
+        cs.hide_render = True
+    sc.render.film_transparent = False
+
+def em_colecao(prefixos):
+    return [o for o in bpy.data.objects if any(c.name.startswith(prefixos) for c in o.users_collection)]
+
+def mostrar_cotas(pai, sub):
+    c = bpy.data.collections.get(pai)
+    c.hide_render = False
+    for ch in c.children:
+        ch.hide_render = (ch.name != sub)
+
+def sol_frontal(d):
+    """Sol vindo de trás da câmera, 35° à esquerda e 40° de altura, para iluminar a fachada."""
+    from mathutils import Vector, Matrix
+    s_ = bpy.data.objects["Sol"]
+    v = Matrix.Rotation(math.radians(35), 3, "Z") @ Vector(d)
+    v = Vector((v.x * math.cos(math.radians(40)), v.y * math.cos(math.radians(40)), -math.sin(math.radians(40))))
+    s_.rotation_euler = v.to_track_quat("-Z", "Y").to_euler()
+
 def apply_mode(mode):
     cutaway(False)
+    restaurar()
+    if mode in ("elev", "corte"):
+        lighting.world("dia"); lighting.sun("dia")
+        c = CUR["cam"]
+        from mathutils import Vector
+        d = (Vector(c["alvo"]) - Vector(c["loc"])); d.z = 0; d.normalize()
+        sol_frontal(d)
+        esconder([o for o in em_colecao(("01_", "01b_", "01c_", "11_")) if not o.name.startswith("Vaso_palmeira_fachada")]
+                 + [o for o in bpy.data.objects if o.name.startswith("Balizador")])
+        if mode == "elev":
+            mostrar_cotas("15_Cotas_Alcados", "15a_Cotas_" + c["vista"])
+            lights(False, False); set_emission(0.2)
+        else:
+            mostrar_cotas("15_Cotas_Cortes", "15b_Cotas_" + c["vista"])
+            lights(True, False, 0.6); set_emission(0.6)
+        bpy.data.objects["Captador_sombra_pranchas"].hide_render = False
+        sc.render.film_transparent = True
+        sc.view_settings.exposure = -0.7 if mode == "elev" else 0.0
+        return
+    if mode == "planta_cotada":
+        lighting.world("dia"); lighting.sun("dia")
+        lights(False, False); set_emission(0.0)
+        cutaway(True)
+        bpy.data.collections["15_Cotas_Planta"].hide_render = False
+        sc.view_settings.exposure = -0.8
+        return
+    if mode == "planta_vazia":
+        lighting.world("dia"); lighting.sun("dia")
+        lights(False, False); set_emission(0.0)
+        cutaway(True)
+        esconder(em_colecao(("09",)))
+        bpy.data.collections["15_Rotulos_Planta"].hide_render = False
+        sc.view_settings.exposure = -0.8
+        return
     if mode in ("dia", "aereo", "topo"):
         lighting.world("dia"); lighting.sun("dia")
         interior = CUR.get("interior", False)
         lights(interior, False, 0.35); set_emission(0.35 if interior else 0.2)
-        sc.view_settings.exposure = 0.75 if interior else -0.85
+        extra = 0.6 if CUR["cam"]["id"] in ("C01", "C02") else 0.0   # corredor sem janela
+        sc.view_settings.exposure = (0.75 + extra) if interior else -0.85
     elif mode in ("tarde", "aereo_tarde"):
         lighting.world("tarde"); lighting.sun("tarde")
         lights(True, True); set_emission(1.0)
@@ -110,14 +184,25 @@ def apply_mode(mode):
         cutaway(True)
         sc.view_settings.exposure = -0.8
 
+# imagens fixas: porta de entrada fechada (no vídeo do percurso ela fica aberta)
+_pv = bpy.data.objects.get("PT-01_pivo_folha")
+if _pv is not None and "rot_fechada" in _pv:
+    _pv.rotation_euler.z = _pv["rot_fechada"]
 t_all = time.time()
 for cid in ids:
     c = CAMS[cid]
+    if "--pular-existentes" in argv and os.path.exists(os.path.join(out, f"{cid}.{ext}")):
+        continue
     cam = cams.make_camera(c, bpy.data.collections["14_Cameras"])   # sempre sincronizada com casa/cameras.py
     sc.camera = cam
-    CUR["interior"] = (cid[0] in "IDKCSBXV" and cid not in ("X03", "X04")) or cid == "M01"
+    CUR["interior"] = (cid[0] in "IDKCSBXV" and cid not in ("X03", "X04", "V02", "V03", "V04", "V05", "V06") and not cid.startswith("CT")) or cid == "M01"
+    CUR["cam"] = c
     apply_mode(c["modo"])
-    if c["modo"] in ("topo", "planta"):
+    if c["modo"] in ("elev", "corte"):
+        sc.render.resolution_x, sc.render.resolution_y = 3840, 1600
+    elif c["modo"] in ("planta_vazia", "planta_cotada"):
+        sc.render.resolution_x, sc.render.resolution_y = 3600, 3600
+    elif c["modo"] in ("topo", "planta"):
         sc.render.resolution_x, sc.render.resolution_y = (3200, 3200) if c["modo"] == "planta" else (3840, 3840)
     else:
         sc.render.resolution_x, sc.render.resolution_y = 3840, 2160
@@ -125,4 +210,5 @@ for cid in ids:
     sc.render.filepath = os.path.join(out, f"{cid}.{ext}")
     bpy.ops.render.render(write_still=True)
     print(f"RENDER {cid} {c['amb']} modo={c['modo']} {time.time()-t0:.1f}s")
+restaurar()
 print(f"TOTAL {time.time()-t_all:.1f}s")

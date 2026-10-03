@@ -12,10 +12,10 @@ export const CAPITULOS = [
     medida: "<b>Laje de cobertura:</b> 15,35 × 13,10 m · <b>Terreno:</b> 30 × 25 m",
   },
   {
-    id: "entrada", rotulo: "Entrada", t0: 9, t1: 16.5, img: "C02",
+    id: "entrada", rotulo: "Entrada", t0: 9, t1: 16.5, img: "V05",
     titulo: "A porta e o corredor",
     texto: [
-      "A porta de entrada abre para um corredor que distribui a casa: à direita ficam as suítes, à frente a sala, e no caminho um aparador com espelho para deixar as chaves.",
+      "Placas de concreto atravessam o jardim até a porta pivotante, embutida nos painéis da fachada. Ela abre para um corredor que distribui a casa: suítes de um lado, sala e cozinha do outro.",
       "É o lugar dos abraços de boas-vindas e das mochilas largadas no fim do dia."
     ],
     medida: "<b>Porta:</b> 1,00 m de largura · <b>Corredor:</b> 1,00 m · <b>Forro:</b> 3,05 m de altura",
@@ -39,11 +39,11 @@ export const CAPITULOS = [
     medida: "<b>Largura:</b> 3,00 m · <b>Banheiro próprio:</b> 1,30 × 2,45 m",
   },
   {
-    id: "estar", rotulo: "Sala de estar", t0: 37, t1: 42.5, img: "V01",
+    id: "estar", rotulo: "Sala de estar", t0: 37, t1: 42.5, img: "V07",
     titulo: "A sala que olha para a piscina",
     texto: [
       "A parede oeste é quase toda de vidro. À tarde, a luz entra baixa e dourada pela sala, e a piscina aparece logo ali fora.",
-      "Um sofá cinza em L voltado para a TV, embutida num painel liso de madeira com luz no topo — como no vídeo de apresentação do projeto."
+      "Sofá cinza modular com almofadas de couro e pied-de-poule, mesa de centro orgânica em nogueira e a TV num painel de madeira com luz no topo."
     ],
     medida: "<b>Largura:</b> 5,00 m · <b>Panos de vidro a oeste:</b> 2 × ~3,95 m, até 2,90 m de altura",
   },
@@ -51,13 +51,13 @@ export const CAPITULOS = [
     id: "jantar", rotulo: "Jantar e cozinha", t0: 42.5, t1: 56, img: "K01",
     titulo: "O primeiro café, a família à mesa",
     texto: [
-      "Cozinha e jantar dividem o mesmo espaço. A ilha em pedra cinza tem cooktop numa ponta e cuba na outra; sobre a mesa clara, cadeiras azuis e dois pendentes de palha.",
+      "Cozinha e jantar dividem o mesmo espaço. Marcenaria terracota com geladeira inox, ilha em pedra com cooktop e cuba, trilho preto com pendentes; na mesa clara, cadeiras azuis e dois pendentes de palha.",
       "A mesa recebe oito pessoas. Ao lado, a despensa e um lavabo completam o apoio da cozinha."
     ],
     medida: "<b>Ilha:</b> 1,10 × 3,35 m · <b>Bancada:</b> 0,90 m · <b>Balcão:</b> 1,10 m (cortes)",
   },
   {
-    id: "piscina", rotulo: "Piscina", t0: 56, t1: 66.5, img: "E04",
+    id: "piscina", rotulo: "Piscina", t0: 56, t1: 66.5, img: "V02",
     titulo: "Quando os amigos chegarem",
     texto: [
       "Uma folha do vidro da sala de jantar corre e a casa se abre para o quintal. A piscina fica a poucos passos, com deck de madeira e espreguiçadeiras à sombra.",
@@ -75,6 +75,12 @@ export const CAPITULOS = [
 ];
 
 export const GALERIA = [
+  ["V05", "Exterior", "Fachada de entrada: painéis taupe, porta pivotante e placas-degrau"],
+  ["V06", "Exterior", "Entrada e garagem"],
+  ["V02", "Exterior", "Salas abertas para a piscina"],
+  ["V03", "Exterior", "Piscina e salas"],
+  ["V04", "Exterior", "Canto da área de serviço"],
+  ["V07", "Sala", "Sala de estar com a piscina ao fundo"],
   ["V01", "Sala", "Jantar, sala e piscina — o enquadramento do vídeo de apresentação"],
   ["E01", "Exterior", "Fachada leste: entrada e garagem coberta"],
   ["E02", "Exterior", "Fachada norte e garagem aberta"],
@@ -125,9 +131,25 @@ export const GALERIA = [
   ["P01", "Plantas 3D", "Planta 3D mobiliada"],
   ["P02", "Plantas 3D", "Planta 3D em perspectiva (sudeste)"],
   ["P03", "Plantas 3D", "Planta 3D em perspectiva (noroeste)"],
+  ["P05", "Plantas 3D", "Implantação: planta humanizada cotada"],
+  ["P04", "Plantas 3D", "Planta 3D com os nomes dos ambientes"],
+  ["A01", "Alçados e cortes", "Alçado frontal — fachada leste"],
+  ["A02", "Alçados e cortes", "Alçado lateral direito — fachada norte"],
+  ["A03", "Alçados e cortes", "Alçado lateral esquerdo — fachada sul"],
+  ["A04", "Alçados e cortes", "Alçado posterior — fachada oeste"],
+  ["CT1", "Alçados e cortes", "Corte longitudinal 3D"],
+  ["CT2", "Alçados e cortes", "Corte transversal 3D"],
 ].map(([id, grupo, legenda]) => ({ id, grupo, legenda }));
 
 export const PLANTAS = [
+  { src: "renders/web/P05.jpg", grande: "renders/4k/P05.jpg", tipo: "Modelo", legenda: "Implantação — planta humanizada cotada (medidas do projeto)" },
+  { src: "renders/web/A01.jpg", grande: "renders/4k/A01.jpg", tipo: "Modelo", legenda: "Alçado frontal 3D (leste) com os níveis dos cortes" },
+  { src: "renders/web/A02.jpg", grande: "renders/4k/A02.jpg", tipo: "Modelo", legenda: "Alçado lateral direito 3D (norte)" },
+  { src: "renders/web/A03.jpg", grande: "renders/4k/A03.jpg", tipo: "Modelo", legenda: "Alçado lateral esquerdo 3D (sul)" },
+  { src: "renders/web/A04.jpg", grande: "renders/4k/A04.jpg", tipo: "Modelo", legenda: "Alçado posterior 3D (oeste)" },
+  { src: "renders/web/CT1.jpg", grande: "renders/4k/CT1.jpg", tipo: "Modelo", legenda: "Corte longitudinal 3D" },
+  { src: "renders/web/CT2.jpg", grande: "renders/4k/CT2.jpg", tipo: "Modelo", legenda: "Corte transversal 3D" },
+  { src: "renders/web/P04.jpg", grande: "renders/4k/P04.jpg", tipo: "Modelo", legenda: "Planta 3D com os nomes dos ambientes" },
   { src: "renders/web/P01.jpg", grande: "renders/4k/P01.jpg", tipo: "Modelo", legenda: "Planta 3D mobiliada gerada do modelo (paredes cortadas a 2,40 m)" },
   { src: "renders/web/P02.jpg", grande: "renders/4k/P02.jpg", tipo: "Modelo", legenda: "Planta 3D em perspectiva, sudeste" },
   { src: "renders/web/P03.jpg", grande: "renders/4k/P03.jpg", tipo: "Modelo", legenda: "Planta 3D em perspectiva, noroeste" },
@@ -140,6 +162,7 @@ export const PLANTAS = [
 ];
 
 export const DOWNLOADS = [
+  { nome: "Apresentação completa (.pdf)", desc: "23 pranchas A3: implantação cotada, plantas 3D, alçados, cortes, fachadas e todos os ambientes.", href: "https://github.com/iroStark/casa-3d/releases/latest/download/apresentacao_casa.pdf", tam: "" },
   { nome: "Modelo Blender (.blend, texturas embutidas)", desc: "Arquivo editável com coleções, materiais, câmeras, luzes e o percurso animado. Blender 5.2.", href: "https://github.com/iroStark/casa-3d/releases/latest/download/casa_blender.zip", tam: "" },
   { nome: "Modelo web (.glb)", desc: "Versão otimizada usada nesta página (Draco + WebP).", href: "modelo/casa.glb", tam: "" },
   { nome: "Vídeo da visita (.mp4)", desc: "Animação renderizada a partir do modelo.", href: "video/visita.mp4", tam: "" },

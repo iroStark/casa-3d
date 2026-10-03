@@ -61,29 +61,31 @@ def build(L):
     G("Pendentes_palha_jantar", F.pendente_palha("Pendente_palha_N", M, TX, TY + 0.55, 1.62) + F.pendente_palha("Pendente_palha_S", M, TX, TY - 0.55, 1.62), "iluminacao")
     F.planta_vaso("Planta_ficus_jantar", M, (0.45, -4.25, 0), h=1.9, pot_r=0.22, kind="ficus", leaves=220, seed=3)
     # ---------------- COZINHA
-    G("Ilha_cozinha", F.ilha("Ilha", M, 3.50, 4.60, -4.65, -1.30))
+    G("Ilha_cozinha", F.ilha("Ilha", M, 3.50, 4.60, -4.65, -1.30, corpo=M["calacatta"]))
+    G("Trilho_cozinha", F.trilho("Trilho_cozinha", M, 4.95, -4.4, 4.95, -0.6, spots=4, pendentes=[(4.05, -3.85, 1.95), (4.05, -3.35, 1.95), (4.05, -2.85, 1.95)]), "iluminacao")
+    G("Trilho_corredor", F.trilho("Trilho_corredor", M, 5.7, -5.35, 12.7, -5.35, spots=5), "iluminacao")
     for k, y in enumerate((-2.20, -3.00, -3.80)):
         F.banqueta(f"Banqueta{k}", M, (3.02, y), 0, M["tecido_grafite"], M["ferro"])
     G("Coifa_ilha", F.coifa("Coifa", M, 4.15, -1.88))
-    G("Marcenaria_nicho", F.torre_nicho("Nicho", M, 5.80, 6.40, -4.65, -1.30))
-    F.cristaleira("Cristaleira", M, (5.60, -0.31), 0, w=1.80, d=0.40)
+    G("Marcenaria_nicho", F.torre_nicho("Nicho", M, 5.80, 6.40, -4.65, -1.30, mat=M["laca_terracota"], geladeira=M["inox"]))
+    F.cristaleira("Cristaleira", M, (5.60, -0.31), 0, w=1.80, d=0.40, mat=M["laca_terracota"])
     # ---------------- SALA DE ESTAR (pág. 3: sofá curvo ao norte, TV ao sul, 2 poltronas laterais)
     set_coll(coll("09b_Sala_Estar", C))
     SX, SY = 2.60, -7.92
     F.tapete("Tapete_estar", 3.4, 2.8, M, M["tapete_sala"], (SX, SY - 0.05))
     # sofá cinza em L voltado para a TV (vídeo); chaise a oeste
     F.sofa_L("Sofa_L", M, (2.55, -6.62), 0, L=3.0, chaise=1.75)
-    F.mesa_centro("Mesa_centro", M, (2.80, -8.15))
-    F.poltrona_concha("Poltrona_concha", M, (4.40, -8.05), -90, M["tecido_azul"])
+    F.mesa_centro_organica("Mesa_centro", M, (2.75, -8.15), 15)
+    F.poltrona_concha("Poltrona_concha", M, (4.40, -8.05), -90, M["tecido_teal_escuro"])
     F.mesa_lateral("Mesa_lateral_O", M, (0.62, -7.25))
-    F.rack_tv("Painel_TV", M, (SX, -9.765), 180, w=3.2, ripado=False)
+    F.rack_tv("Painel_TV", M, (SX, -9.765), 180, w=3.2, ripado=False, mat=M["laca_branca"])
     G("Painel_madeira_TV", F.painel_madeira("Painel_madeira_TV", M, 0.95, 4.25, -9.80, 0.0, 2.75, face=+1, frisos=0.0))
     F.luminaria_tripe("Luminaria_tripe", M, (0.55, -6.25, 0))
     F.vaso_palha("Vaso_palha_1", M, (0.40, -8.75, 0), h=0.85, r=0.22)
     F.vaso_palha("Vaso_palha_2", M, (0.70, -9.05, 0), h=0.55, r=0.17)
-    F.planta_vaso("Planta_palmeira_estar", M, (4.72, -9.40, 0), h=1.7, pot_r=0.2, kind="palmeira", leaves=26, seed=5, pot=M["vaso"])
+    F.planta_vaso("Planta_palmeira_estar", M, (0.45, -9.45, 0), h=1.7, pot_r=0.2, kind="palmeira", leaves=26, seed=5, pot=M["vaso"])
     F.planta_vaso("Planta_oliveira_estar", M, (0.45, -5.35, 0), h=1.6, pot_r=0.2, kind="oliveira", leaves=420, seed=6, pot=M["ceramica_off"])
-    F.quadro("Quadro_estar", M, "art_a", 1.10, 0.85, (5.07, -7.85, 1.75), -90)
+    F.quadro("Poster_Life", M, "poster_life", 0.70, 1.30, (5.07, -7.05, 1.55), -90, frame=M["alu_preto"])
     # luminária de piso ao lado do sofá
     lp = [cylinder("Luminaria_piso_base", 0.15, 0.02, (0, 0, 0), 32, M["latao"]),
           cylinder("Luminaria_piso_haste", 0.012, 1.45, (0, 0, 0.02), 12, M["latao"]),
@@ -173,17 +175,17 @@ def build(L):
     G("Despensa_prateleiras", prat)
     # ---------------- ÁREA DE SERVIÇO (nicho externo 1,20 / 0,60 / 1,20)
     sv = [box("Maquina_lavar", 0.95, 1.55, -10.50, -10.02, 0.0, 0.85, M["laca_branca"], bevel=0.02),
-          cylinder("Maquina_porta", 0.17, 0.02, (1.25, -10.50, 0.48), 40, M["vidro_preto"], axis="Y"),
+          cylinder("Maquina_porta", 0.17, 0.02, (0, 0, 0), 40, M["vidro_preto"]),
           box("Tanque_gabinete", 1.58, 2.08, -10.50, -10.02, 0.0, 0.86, M["laca_off"]),
           box("Tanque_tampo", 1.58, 2.08, -10.50, -10.02, 0.86, 0.90, M["calacatta"]),
           box("Servico_prat1", 0.92, 2.08, -10.40, -10.02, 1.55, 1.58, M["carvalho"]),
           box("Servico_prat2", 2.27, 2.88, -10.42, -10.02, 0.9, 0.93, M["carvalho"]),
           box("Servico_prat3", 2.27, 2.88, -10.42, -10.02, 1.5, 1.53, M["carvalho"]),
           cylinder("Aquecedor", 0.22, 1.10, (3.70, -10.25, 0.9), 40, M["laca_branca"])]
-    sv[1].rotation_euler = (math.pi / 2, 0, 0); sv[1].location = (1.25, -10.50, 0.48)
+    sv[1].rotation_euler = (math.pi / 2, 0, 0); sv[1].location = (1.25, -10.50, 0.48)  # porta na frente (sul) da máquina
     G("Servico_equipamentos", sv)
     # ---------------- GARAGEM — armários na parede sul (face -4.65)
-    G("Armario_garagem", F.guarda_roupa("Armario_garagem", M, 9.20, 12.60, -4.65, -4.25, h=2.10, front="+y", mat=M["laca_off"]))
+    # garagem livre como nas imagens do vídeo (parede sul em painel taupe)
     F.planta_vaso("Planta_garagem", M, (12.55, -0.55, 0), h=1.5, pot_r=0.25, kind="palmeira", leaves=24, seed=13, pot=M["vaso"])
     # ---------------- CORTINAS (linho), sob a sanca
     set_coll(coll("09h_Cortinas", C))

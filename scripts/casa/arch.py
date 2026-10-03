@@ -55,7 +55,9 @@ def wall_face_material(L, x, y, z):
         return L["nero"]
     if r == "wc_s2":
         return L["parede_banho"]
-    if r in ("garagem", "servico"):
+    if r == "servico":
+        return L["grafite_fosco"]
+    if r == "garagem":
         return L["parede_ext"]
     if r is not None:
         return L["parede_int"]
@@ -199,7 +201,7 @@ def door(L, d, C, angle_deg=0.0, swing=None, hinge=None, style="lisa"):
             return box(name, a, b, c + p0, c + p1, za, zb, mat, cc)
         return box(name, c + p0, c + p1, a, b, za, zb, mat, cc)
     bt = 0.035  # batente
-    fm = L["laca_off"] if style != "entrada" else L["porta_madeira"]
+    fm = L["carvalho_claro"] if style not in ("entrada", "veneziana") else (L["painel_taupe"] if style == "entrada" else L["grafite_fosco"])
     # batente (marco) em U
     objs.append(B(d["id"] + "_batente_e", a0, a0 + bt, -t_wall / 2, t_wall / 2, 0, H, fm))
     objs.append(B(d["id"] + "_batente_d", a1 - bt, a1, -t_wall / 2, t_wall / 2, 0, H, fm))
@@ -227,6 +229,20 @@ def door(L, d, C, angle_deg=0.0, swing=None, hinge=None, style="lisa"):
         return box(name, u0, u1, v0, v1, za, zb, mat, C)
     leaf_parts.append(LB(d["id"] + "_folha", 0, lw, -lt / 2, lt / 2, 0.008, H - bt - 0.004, leaf_mat))
     if style == "entrada":
+        leaf_parts[0].data.materials[0] = L["painel_taupe"]
+        for s_ in (-1, 1):
+            f0 = s_ * lt / 2
+            def faixa(e):   # intervalo (v0, v1) saindo da face do lado s_ com espessura e
+                return (min(f0, f0 + s_ * e), max(f0, f0 + s_ * e))
+            q0, q1 = faixa(0.014)
+            leaf_parts.append(LB(f"{d['id']}_puxador_barra{s_}", lw - 0.11, lw - 0.085, q0, q1, 0.15, H - 0.2, L["alu_preto"]))
+            q0, q1 = faixa(0.012)
+            leaf_parts.append(LB(f"{d['id']}_fechadura{s_}", lw - 0.22, lw - 0.155, q0, q1, 1.0, 1.18, L["alu_preto"]))
+            q0, q1 = faixa(0.0135)
+            tela = LB(f"{d['id']}_fechadura_tela{s_}", lw - 0.205, lw - 0.17, q0, q1, 1.10, 1.15, L["led"])
+            tela["luz"] = 1
+            leaf_parts.append(tela)
+    elif style == "entrada_frisos":
         # frisos verticais em baixo-relevo + puxador longo de latão
         for k in range(1, 6):
             u = lw * k / 6
@@ -292,6 +308,7 @@ def door(L, d, C, angle_deg=0.0, swing=None, hinge=None, style="lisa"):
     pv.location = pivot
     pv.rotation_euler = (0, 0, rot0 + sign * math.radians(angle_deg))
     pv["abertura_graus"] = angle_deg
+    pv["rot_fechada"] = rot0
     pv["nota"] = "Gire o eixo Z deste Empty para abrir/fechar a folha"
     for o in objs + leaf_parts + [pv]:
         o["id"] = d["id"]; o["status"] = d["status"]; o["categoria"] = "arquitetura"
@@ -384,7 +401,7 @@ def slab_and_roof(L, C):
     t = 0.02
     for nm, (a, b, c, d) in {"N": (x0 - t, x1 + t, y1, y1 + t), "S": (x0 - t, x1 + t, y0 - t, y0),
                              "O": (x0 - t, x0, y0, y1), "L": (x1, x1 + t, y0, y1)}.items():
-        o.append(box("Testeira_" + nm, a, b, c, d, Z_SLAB_BOT - 0.03, Z_SLAB_TOP + 0.03, L["laca_branca"], C))
+        o.append(box("Testeira_" + nm, a, b, c, d, Z_SLAB_BOT - 0.03, Z_SLAB_TOP + 0.03, L["taupe_escuro"], C))
     # forro do beiral (face inferior pintada) — mesma laje, só material
     for x in o:
         x["categoria"] = "arquitetura"
@@ -451,8 +468,11 @@ def facade_details(L, C):
     from .mats import pbr
     fr = pbr("Friso (junta) da fachada", (0.45, 0.43, 0.40), 0.9, categoria="arquitetura")
     o = []
+    from .estilo import ESTILO
+    mod = ESTILO["nome"] == "moderno"
+    xf = 13.22 if mod else 13.20   # no moderno o friso fica sobre o revestimento de 2 cm
     for k, y in enumerate((-10.71, -9.70, -8.67, -7.66, -6.65)):
-        b = box(f"Friso_fachada_leste_{k}", 13.200, 13.206, y - 0.012, y + 0.012, 0.0, 3.20, fr, C)
+        b = box(f"Friso_fachada_leste_{k}", xf, xf + 0.006, y - 0.012, y + 0.012, 0.0, 3.20, fr, C)
         b["status"] = "X — juntas desenhadas no Alçado Frontal"; b["categoria"] = "arquitetura"
         o.append(b)
     n = int((4.65 - 1.25) / 0.06)
@@ -461,6 +481,31 @@ def facade_details(L, C):
         b = box(f"Ripado_garagem_{k}", 8.50, 8.53, y, y + 0.04, 0.0, 2.88, L["carvalho"], C)
         b["status"] = "P"; b["categoria"] = "proposta"
         o.append(b)
+    if not mod:
+        # fachada leste em painéis taupe com juntas verticais (vídeo) — 2 cm sobre a face, sem alterar vãos
+        tp = L["painel_taupe"]
+        rv = [box("Painel_fachada_leste", 13.20, 13.22, -11.25, -5.85, 0.0, 3.20, tp, C),
+              box("Painel_fachada_leste_verga", 13.20, 13.22, -5.85, -4.85, 2.90, 3.20, tp, C),
+              box("Painel_garagem_sul", 8.50, 13.22, -4.65, -4.63, 0.0, 3.20, tp, C),
+              box("Forro_beiral_claro", -1.125, 14.225, -12.05, 1.05, 3.1965, 3.1995, L["forro_beiral"], C),
+              box("Coluna_garagem_bronze", 12.79, 13.21, -0.11, 0.11, 0.0, 3.195, L["taupe_escuro"], C)]
+        for b in rv:
+            b["status"] = "P — painéis/forro/pintura do vídeo de apresentação (2 cm)"; b["categoria"] = "proposta"
+        o += rv
+        for ob in o:
+            if ob.name.startswith("Friso_fachada_leste"):
+                ob.location.x = 0.02   # sobre o painel
+                ob.data.materials[0] = L["junta_escura"]
+    if mod:
+        # revestimentos de 2 cm sobre a face externa (PROPOSTA — não altera eixos nem vãos)
+        rv = [box("Revest_pedra_fachada_leste", 13.20, 13.22, -11.25, -5.85, 0.0, 3.20, L["pedra_fachada"], C),
+              box("Revest_pedra_WC_sul", 8.30, 10.00, -11.47, -11.45, 0.0, 3.20, L["pedra_fachada"], C),
+              box("Revest_pedra_servico_O", 0.68, 0.70, -10.62, -9.80, 0.0, 3.20, L["pedra_fachada"], C),
+              # forro de madeira sob a laje (beiral e garagem)
+              box("Forro_madeira_beiral", -1.125, 14.225, -12.05, 1.05, 3.1965, 3.1995, L["forro_madeira"], C)]
+        for b in rv:
+            b["status"] = "P — revestimento/forro (2 cm), estilo moderno"; b["categoria"] = "proposta"
+        o += rv
     return o
 
 def build(L):
@@ -489,8 +534,8 @@ def build(L):
     door(L, P["PT-05"], CJ, 70, swing=-1, hinge="a")                    # WC s1: dobradiça sul, abre p/ oeste
     door(L, P["PT-06"], CJ, 35, swing=1, hinge="a")                     # WC social: dobradiça oeste, abre p/ norte
     door(L, P["PT-07"], CJ, 0, swing=-1, hinge="b")                     # despensa: dobradiça leste, abre p/ sul
-    door(L, dict(P["PT-08"], x=[0.90, 1.90], id="PT-08a"), CJ, 100, swing=-1, hinge="a", style="veneziana")
-    door(L, dict(P["PT-08"], x=[1.90, 2.90], id="PT-08b"), CJ, 100, swing=-1, hinge="b", style="veneziana")
+    door(L, dict(P["PT-08"], x=[0.90, 1.90], id="PT-08a"), CJ, 0, swing=-1, hinge="a", style="veneziana")
+    door(L, dict(P["PT-08"], x=[1.90, 2.90], id="PT-08b"), CJ, 0, swing=-1, hinge="b", style="veneziana")
     door(L, P["PT-09"], CJ, 0, swing=-1, hinge="b", style="veneziana")
     set_coll(CP)
     floors(L, CP)

@@ -20,7 +20,8 @@ sc = bpy.context.scene
 
 # 1) limpar o que não vai para a web
 for ob in list(bpy.data.objects):
-    if ob.name.startswith(("REF_", "CAM_", "ALVO_", "CAM_validacao")) or ob.type in ("LIGHT", "CAMERA"):
+    if ob.name.startswith(("REF_", "CAM_", "ALVO_", "CAM_validacao", "Cota_", "Rotulo_", "Norte_", "Captador_")) or ob.type in ("LIGHT", "CAMERA", "FONT") \
+            or any(c.name.startswith("15") for c in ob.users_collection):
         bpy.data.objects.remove(ob, do_unlink=True)
 
 # 2) assar tonalização (Mix multiply) e reduzir texturas
